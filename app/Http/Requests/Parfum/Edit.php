@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Layanan;
+namespace App\Http\Requests\Parfum;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
@@ -8,7 +8,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Log;
 
-class Create extends FormRequest
+class Edit extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,17 +28,16 @@ class Create extends FormRequest
         return [
             "toko_id"   => "required",
             "nama"      => "required",
-            "type"      => "required",
             "harga"     => "required"
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
-        Log::notice('Validation create layanan failed');
+        Log::notice('Validation edit parfum failed');
         throw new HttpResponseException(response()->json([
             "status"    => false,
-            "message"   => "Validation create layanan failed",
+            "message"   => "Validation edit parfum failed",
             "errors"    => $validator->errors()
         ], 422));
     }

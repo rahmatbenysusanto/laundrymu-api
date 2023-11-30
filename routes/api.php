@@ -7,6 +7,7 @@ use App\Http\Middleware\ApiKey;
 use App\Http\Middleware\TokenJWT;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\LayananController;
+use App\Http\Controllers\ParfumController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +44,14 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/layanan/{id}', 'findById');
             Route::patch('/layanan/{id}', 'edit');
             Route::delete('/layanan/{id}', 'delete');
+        });
+
+        Route::controller(ParfumController::class)->group(function () {
+            Route::get('/parfum/toko/{toko_id}', 'findByToko');
+            Route::post('/parfum', 'create');
+            Route::get('/parfum/{id}', 'findById');
+            Route::patch('/parfum/{id}', 'edit');
+            Route::delete('/parfum/{id}', 'delete');
         });
     });
 });

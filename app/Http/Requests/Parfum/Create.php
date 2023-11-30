@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Layanan;
+namespace App\Http\Requests\Parfum;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
@@ -28,17 +28,16 @@ class Create extends FormRequest
         return [
             "toko_id"   => "required",
             "nama"      => "required",
-            "type"      => "required",
             "harga"     => "required"
         ];
     }
 
     protected function failedValidation(Validator $validator)
     {
-        Log::notice('Validation create layanan failed');
+        Log::notice('Validation create parfum failed');
         throw new HttpResponseException(response()->json([
             "status"    => false,
-            "message"   => "Validation create layanan failed",
+            "message"   => "Validation create parfum failed",
             "errors"    => $validator->errors()
         ], 422));
     }
