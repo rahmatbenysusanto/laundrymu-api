@@ -11,10 +11,18 @@ class ApiKey
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Closure(Request): (Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        $apiKey = $request->header('apiKey');
+        if (isset($apiKey) && $apiKey == env('API_KEY')) {
+            return $next($request);
+        } else {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'API key not valid'
+            ], 401);
+        }
     }
 }

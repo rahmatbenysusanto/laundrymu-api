@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Http\Repository\UserRepository;
+use DateTimeImmutable;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -10,7 +11,8 @@ use Illuminate\Support\Facades\Hash;
 class UserService
 {
     public function __construct(
-        protected UserRepository $userRepository
+        protected UserRepository $userRepository,
+        protected AuthService $authService
     ){}
 
     public function create($request): void
@@ -27,27 +29,24 @@ class UserService
 
     public function login($request)
     {
-        $request->validate([
-            'no_hp'     => 'required',
-            'password'  => 'required',
-        ]);
-
         $credentials = $request->only('no_hp', 'password');
 
         if (Auth::attempt($credentials)) {
             $user = $this->userRepository->find($request->no_hp);
+            $issuedAt   = new DateTimeImmutable();
             $payload = [
-                'iss' => [
+                'iss' => 'laundrymu-api',
+                'aud' => $user->email,
+                'iat' => $issuedAt->getTimestamp(),
+                'nbf' => $issuedAt->getTimestamp(),
+                'data'=> [
                     'id'    => $user->id,
                     'email' => $user->email,
                     'role'  => $user->role
-                ],
-                'aud' => $user->email,
-                'iat' => round(microtime(true) * 1000),
-                'nbf' => strtotime(date('Y-m-d H:i:s', strtotime('+15 days'))) * 1000
+                ]
             ];
 
-            $token = $this->generateTokenJWT($payload);
+            $token = $this->authService->generateTokenJWT($payload);
 
             return [
                 'token' => $token,
@@ -60,10 +59,5 @@ class UserService
         } else {
             abort(400, "Login Gagal, silahkan cek no hp atau password anda");
         }
-    }
-
-    private function generateTokenJWT($payload): string
-    {
-        return JWT::encode($payload, file_get_contents(base_path('private.pem')), 'RS256');
     }
 }
