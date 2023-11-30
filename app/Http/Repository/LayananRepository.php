@@ -15,4 +15,19 @@ class LayananRepository
     {
         return Layanan::where('id', $id)->first();
     }
+
+    public function create($data): void
+    {
+        Layanan::create($data);
+    }
+
+    public function edit($id, $data): void
+    {
+        Layanan::where('id', $id)->update($data);
+    }
+
+    public function delete($id): void
+    {
+        Layanan::where('id', $id)->delete();
+    }
 }

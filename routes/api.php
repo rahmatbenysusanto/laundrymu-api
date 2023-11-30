@@ -41,7 +41,7 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/layanan/toko/{toko_id}', 'findByToko');
             Route::post('/layanan', 'create');
             Route::get('/layanan/{id}', 'findById');
-            Route::patch('/layanan', 'edit');
+            Route::patch('/layanan/{id}', 'edit');
             Route::delete('/layanan/{id}', 'delete');
         });
     });
