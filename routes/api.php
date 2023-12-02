@@ -9,6 +9,7 @@ use App\Http\Controllers\TokoController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\ParfumController;
 use App\Http\Controllers\DiskonController;
+use App\Http\Controllers\PengirimanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,14 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/diskon/{id}', 'findById');
             Route::patch('/diskon/{id}', 'edit');
             Route::delete('/diskon/{id}', 'delete');
+        });
+
+        Route::controller(PengirimanController::class)->group(function () {
+            Route::get('/pengiriman/toko/{toko_id}', 'findByToko');
+            Route::post('/pengiriman', 'create');
+            Route::get('/pengiriman/{id}', 'findById');
+            Route::patch('/pengiriman/{id}', 'edit');
+            Route::delete('/pengiriman/{id}', 'delete');
         });
     });
 });
