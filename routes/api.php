@@ -8,6 +8,7 @@ use App\Http\Middleware\TokenJWT;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\ParfumController;
+use App\Http\Controllers\DiskonController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,14 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/parfum/{id}', 'findById');
             Route::patch('/parfum/{id}', 'edit');
             Route::delete('/parfum/{id}', 'delete');
+        });
+
+        Route::controller(DiskonController::class)->group(function () {
+            Route::get('/diskon/toko/{toko_id}', 'findByToko');
+            Route::post('/diskon', 'create');
+            Route::get('/diskon/{id}', 'findById');
+            Route::patch('/diskon/{id}', 'edit');
+            Route::delete('/diskon/{id}', 'delete');
         });
     });
 });

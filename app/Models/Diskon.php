@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Diskon extends Model
 {
     use HasFactory;
+    protected $table = "diskon";
+    protected $fillable = ["toko_id", "nama", "type", "nominal"];
 }
