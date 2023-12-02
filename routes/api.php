@@ -10,6 +10,8 @@ use App\Http\Controllers\LayananController;
 use App\Http\Controllers\ParfumController;
 use App\Http\Controllers\DiskonController;
 use App\Http\Controllers\PengirimanController;
+use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\PembayaranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +72,22 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/pengiriman/{id}', 'findById');
             Route::patch('/pengiriman/{id}', 'edit');
             Route::delete('/pengiriman/{id}', 'delete');
+        });
+
+        Route::controller(PelangganController::class)->group(function () {
+            Route::get('/pelanggan/toko/{toko_id}', 'findByToko');
+            Route::post('/pelanggan', 'create');
+            Route::get('/pelanggan/{id}', 'findById');
+            Route::patch('/pelanggan/{id}', 'edit');
+            Route::delete('/pelanggan/{id}', 'delete');
+        });
+
+        Route::controller(PembayaranController::class)->group(function () {
+            Route::get('/pembayaran/toko/{toko_id}', 'findByToko');
+            Route::post('/pembayaran', 'create');
+            Route::get('/pembayaran/{id}', 'findById');
+            Route::patch('/pembayaran/{id}', 'edit');
+            Route::delete('/pembayaran/{id}', 'delete');
         });
     });
 });

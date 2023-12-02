@@ -16,4 +16,14 @@ class TransaksiRepository
     {
         return Transaksi::where('pengiriman_id', $pengiriman_id)->count();
     }
+
+    public function countByPelanggan($pelanggan_id)
+    {
+        return Transaksi::where('pelanggan_id', $pelanggan_id)->count();
+    }
+
+    public function countByPembayaran($pembayaran_id)
+    {
+        return Transaksi::where('pembayaran_id', $pembayaran_id)->count();
+    }
 }
