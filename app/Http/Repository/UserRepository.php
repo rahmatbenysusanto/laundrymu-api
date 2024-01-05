@@ -15,4 +15,9 @@ class UserRepository
     {
         return User::where('no_hp', $no_hp)->first();
     }
+
+    public function findById($id)
+    {
+        return User::where('id', $id)->first();
+    }
 }

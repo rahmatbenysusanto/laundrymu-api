@@ -32,9 +32,14 @@ Route::middleware([ApiKey::class])->group(function () {
     Route::controller(UserController::class)->group(function () {
         Route::post('/user/register', 'create');
         Route::post('/user/login', 'login');
+        Route::get('/user/generate-new-token/{id}', 'generateNewToken');
     });
 
     Route::middleware([TokenJWT::class])->group(function () {
+        Route::controller(UserController::class)->group(function () {
+            Route::get('/generate-new-token/{id}', 'generateNewToken');
+        });
+
         Route::controller(TokoController::class)->group(function () {
             Route::get('/toko', 'getAll');
             Route::get('/toko/user/{userId}', 'findByUser');

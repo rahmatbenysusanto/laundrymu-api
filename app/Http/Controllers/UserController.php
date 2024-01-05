@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\User\CreateUser;
+use App\Http\Requests\User\GenerateToken;
 use App\Http\Requests\User\LoginUser;
 use App\Http\Services\ResponseService;
 use App\Http\Services\UserService;
@@ -51,5 +52,11 @@ class UserController extends Controller
             DB::rollBack();
             return $this->responseService->responseErrors(false, 'Login user error', $err->getMessage(), 400);
         }
+    }
+
+    public function generateNewToken($user_id): JsonResponse
+    {
+        $result = $this->userService->generateNewToken(1);
+        return $this->responseService->responseWithData(true, 'Login sukses', $result, 200);
     }
 }

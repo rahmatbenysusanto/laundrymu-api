@@ -60,4 +60,15 @@ class UserService
             abort(400, "Login Gagal, silahkan cek no hp atau password anda");
         }
     }
+
+    public function generateNewToken($user_id): array
+    {
+        $user = $this->userRepository->findById($user_id);
+        return [
+            'id'    => $user->id,
+            'nama'  => $user->nama,
+            'no_hp' => $user->no_hp,
+            'role'  => $user->role
+        ];
+    }
 }
