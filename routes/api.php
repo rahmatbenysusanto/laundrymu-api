@@ -94,6 +94,18 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::patch('/pembayaran/{id}', 'edit');
             Route::delete('/pembayaran/{id}', 'delete');
         });
+
+        Route::controller(\App\Http\Controllers\TransaksiController::class)->group(function () {
+            Route::get('/transaksi/toko/{id}', 'list');
+            Route::get('/transaksi/history/toko/{id}', 'getHistoryByTokoId');
+            Route::get('/transaksi/{orderNumber}', 'findByOrderNumber');
+            Route::post('/transaksi', 'create');
+        });
+
+        Route::controller(\App\Http\Controllers\PegawaiController::class)->group(function () {
+            Route::get('/pegawai/toko/{id}', 'getByTokoId');
+            Route::post('/pegawai', 'create');
+        });
     });
 });
 

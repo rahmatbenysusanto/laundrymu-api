@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class UserHasToko extends Model
 {
     use HasFactory;
+    protected $table = "user_has_toko";
+    protected $fillable = ["user_id", "toko_id"];
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

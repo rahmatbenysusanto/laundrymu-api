@@ -2,13 +2,21 @@
 
 namespace App\Http\Services;
 
+use App\Http\Repository\DiskonRepository;
+use App\Http\Repository\ParfumRepository;
+use App\Http\Repository\PembayaranRepository;
+use App\Http\Repository\PengirimanRepository;
 use App\Http\Repository\TokoRepository;
 use Illuminate\Database\Eloquent\Collection;
 
 class TokoService
 {
     public function __construct(
-        protected TokoRepository $tokoRepository
+        protected TokoRepository $tokoRepository,
+        protected ParfumRepository $parfumRepository,
+        protected PembayaranRepository $pembayaranRepository,
+        protected DiskonRepository $diskonRepository,
+        protected PengirimanRepository $pengirimanRepository
     ){}
 
     public function getAll(): Collection
@@ -44,6 +52,31 @@ class TokoService
             "lat"       => $request->post("lat"),
             "long"      => $request->post("long")
         ];
-        $this->tokoRepository->create($data);
+        $create = $this->tokoRepository->create($data);
+
+        // Create Default Value
+        $this->diskonRepository->create([
+            'toko_id'   => $create->id,
+            'nama'      => 'tidak ada diskon',
+            'type'      => 'nominal',
+            'nominal'   => 0
+        ]);
+
+        $this->parfumRepository->create([
+            'toko_id'   => $create->id,
+            'nama'      => 'standar',
+            'harga'     => 0
+        ]);
+
+        $this->pembayaranRepository->create([
+            'toko_id'   => $create->id,
+            'nama'      => 'tunai',
+        ]);
+
+        $this->pengirimanRepository->create([
+            'toko_id'   => $create->id,
+            'nama'      => 'Ambil antar sendiri',
+            'harga'     => 0
+        ]);
     }
 }

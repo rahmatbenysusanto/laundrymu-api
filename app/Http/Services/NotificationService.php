@@ -13,4 +13,9 @@ class NotificationService
     {
 
     }
+
+    public function appNotification($toko_id, $message)
+    {
+
+    }
 }

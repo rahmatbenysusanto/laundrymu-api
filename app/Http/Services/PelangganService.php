@@ -22,14 +22,14 @@ class PelangganService
         return $this->pelangganRepository->findById($id);
     }
 
-    public function create($request): void
+    public function create($request)
     {
         $data = [
             "toko_id"   => $request->post("toko_id"),
             "nama"      => $request->post("nama"),
             "no_hp"     => $request->post("no_hp"),
         ];
-        $this->pelangganRepository->create($data);
+        return $this->pelangganRepository->create($data);
     }
 
     public function edit($id, $request): void

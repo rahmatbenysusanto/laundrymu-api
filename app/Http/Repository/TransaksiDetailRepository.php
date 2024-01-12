@@ -10,4 +10,14 @@ class TransaksiDetailRepository
     {
         return TransaksiDetail::where('layanan_id', $layanan_id)->count();
     }
+
+    public function create($data)
+    {
+        return TransaksiDetail::create($data);
+    }
+
+    public function findByTransaksiId($transaksi_id): \Illuminate\Database\Eloquent\Collection|array
+    {
+        return TransaksiDetail::with('layanan')->where('transaksi_id', $transaksi_id)->get();
+    }
 }

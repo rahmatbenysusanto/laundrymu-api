@@ -16,9 +16,9 @@ class PelangganRepository
         return Pelanggan::where('id', $id)->first();
     }
 
-    public function create($data): void
+    public function create($data)
     {
-        Pelanggan::create($data);
+        return Pelanggan::create($data);
     }
 
     public function edit($id, $data): void

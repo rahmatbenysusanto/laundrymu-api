@@ -22,8 +22,8 @@ class TokoRepository
         return Toko::where('toko_id', $tokoId)->first();
     }
 
-    public function create($data): void
+    public function create($data)
     {
-        Toko::create($data);
+        return Toko::create($data);
     }
 }

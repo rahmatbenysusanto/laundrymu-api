@@ -20,4 +20,14 @@ class UserRepository
     {
         return User::where('id', $id)->first();
     }
+
+    public function findByNoHp($no_hp)
+    {
+        return User::where('no_hp', $no_hp)->first();
+    }
+
+    public function findByEmail($email)
+    {
+        return User::where('email', $email)->first();
+    }
 }

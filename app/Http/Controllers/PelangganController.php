@@ -35,9 +35,9 @@ class PelangganController extends Controller
     {
         try {
             DB::beginTransaction();
-            $this->pelangganService->create($request);
+            $id =  $this->pelangganService->create($request);
             DB::commit();
-            return $this->responseService->responseNotData(true, "Create pelanggan successfully", 201);
+            return $this->responseService->responseWithData(true, "Create pelanggan successfully", $id->id, 201);
         } catch (\Exception $err) {
             DB::rollBack();
             return $this->responseService->responseErrors(false, "Create pelanggan failed", $err->getMessage(), 400);
