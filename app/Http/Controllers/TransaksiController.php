@@ -46,4 +46,17 @@ class TransaksiController extends Controller
             return $this->responseService->responseErrors(false, 'Create transaksi failed', $err->getMessage(), 400);
         }
     }
+
+    public function prosesTransaksi($order_number, $status): \Illuminate\Http\JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->transaksiService->prosesTransaksi($order_number, $status);
+            DB::commit();
+            return $this->responseService->responseNotData(true, 'Proses transaksi successfully', 200);
+        } catch (\Exception $err) {
+            DB::rollBack();
+            return $this->responseService->responseErrors(false, 'Proses transaksi failed', $err->getMessage(), 400);
+        }
+    }
 }

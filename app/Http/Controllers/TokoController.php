@@ -31,6 +31,13 @@ class TokoController extends Controller
         return $this->responseService->responseWithData(true, "Get toko success", $toko, 200);
     }
 
+    public function getTokoPegawai($user_id): JsonResponse
+    {
+        $toko = $this->tokoService->getTokoPegawai($user_id);
+
+        return $this->responseService->responseWithData(true, "Get toko success", $toko, 200);
+    }
+
     public function findById($tokoId): JsonResponse
     {
         $toko = $this->tokoService->findById($tokoId);

@@ -74,7 +74,7 @@ class TransaksiRepository
                 'nama',
                 'harga'
             ]);
-        }
+        },
         ])
             ->where('toko_id', $toko_id)
             ->where('created_at', '>=', Carbon::today()->subDays(30))
@@ -102,7 +102,8 @@ class TransaksiRepository
                 'nama',
                 'harga'
             ]);
-        }
+        },
+            'historiStatusTransaksi'
         ])
             ->where('order_number', $order_number)->first();
     }
@@ -110,5 +111,28 @@ class TransaksiRepository
     public function create($data)
     {
         return Transaksi::create($data);
+    }
+
+    public function updateByOrderId($order_id, $data)
+    {
+        Transaksi::where('order_number', $order_id)->update($data);
+    }
+
+    public function jumlahTransaksiHarian($toko_id)
+    {
+        return Transaksi::where('toko_id', $toko_id)
+            ->whereDay('created_at', date('d', time()))
+            ->whereMonth('created_at', date('m', time()))
+            ->whereYear('created_at', date('Y', time()))
+            ->count();
+    }
+
+    public function jumlahNominalHarian($toko_id)
+    {
+        return Transaksi::where('toko_id', $toko_id)
+            ->whereDay('created_at', date('d', time()))
+            ->whereMonth('created_at', date('m', time()))
+            ->whereYear('created_at', date('Y', time()))
+            ->sum('total_harga');
     }
 }

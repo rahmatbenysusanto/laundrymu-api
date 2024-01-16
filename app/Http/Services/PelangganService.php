@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Http\Repository\PelangganHasTransaksiRepository;
 use App\Http\Repository\PelangganRepository;
 use App\Http\Repository\TransaksiRepository;
 
@@ -9,7 +10,8 @@ class PelangganService
 {
     public function __construct(
         protected PelangganRepository $pelangganRepository,
-        protected TransaksiRepository $transaksiRepository
+        protected TransaksiRepository $transaksiRepository,
+        protected PelangganHasTransaksiRepository $pelangganHasTransaksiRepository
     ){}
 
     public function findByToko($toko_id)
@@ -29,7 +31,17 @@ class PelangganService
             "nama"      => $request->post("nama"),
             "no_hp"     => $request->post("no_hp"),
         ];
-        return $this->pelangganRepository->create($data);
+        $pelanggan =  $this->pelangganRepository->create($data);
+
+        $this->pelangganHasTransaksiRepository->create([
+            'pelanggan_id'              => $pelanggan->id,
+            'jumlah_transaksi'          => 0,
+            'jumlah_transaksi_bulanan'  => 0,
+            'nominal_transaksi'         => 0,
+            'nominal_transaksi_bulanan' => 0
+        ]);
+
+        return $pelanggan;
     }
 
     public function edit($id, $request): void

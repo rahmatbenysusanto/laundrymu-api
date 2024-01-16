@@ -6,7 +6,9 @@ use App\Http\Repository\DiskonRepository;
 use App\Http\Repository\ParfumRepository;
 use App\Http\Repository\PembayaranRepository;
 use App\Http\Repository\PengirimanRepository;
+use App\Http\Repository\StatusTransaksiHasTokoRepository;
 use App\Http\Repository\TokoRepository;
+use App\Http\Repository\UserHasTokoRepository;
 use Illuminate\Database\Eloquent\Collection;
 
 class TokoService
@@ -16,7 +18,9 @@ class TokoService
         protected ParfumRepository $parfumRepository,
         protected PembayaranRepository $pembayaranRepository,
         protected DiskonRepository $diskonRepository,
-        protected PengirimanRepository $pengirimanRepository
+        protected PengirimanRepository $pengirimanRepository,
+        protected UserHasTokoRepository $userHasTokoRepository,
+        protected StatusTransaksiHasTokoRepository $statusTransaksiHasTokoRepository
     ){}
 
     public function getAll(): Collection
@@ -78,5 +82,17 @@ class TokoService
             'nama'      => 'Ambil antar sendiri',
             'harga'     => 0
         ]);
+
+        $this->statusTransaksiHasTokoRepository->create([
+            'toko_id'   => $create->id,
+            'baru'      => 0,
+            'diproses'  => 0,
+            'selesai'   => 0
+        ]);
+    }
+
+    public function getTokoPegawai($user_id)
+    {
+        return $this->userHasTokoRepository->findByUserId($user_id);
     }
 }

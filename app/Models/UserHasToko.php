@@ -15,4 +15,9 @@ class UserHasToko extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function toko(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Toko::class);
+    }
 }

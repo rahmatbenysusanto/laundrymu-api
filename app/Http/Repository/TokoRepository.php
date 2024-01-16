@@ -19,7 +19,7 @@ class TokoRepository
 
     public function findById($tokoId)
     {
-        return Toko::where('toko_id', $tokoId)->first();
+        return Toko::where('id', $tokoId)->first();
     }
 
     public function create($data)

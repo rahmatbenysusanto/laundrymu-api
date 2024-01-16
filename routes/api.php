@@ -45,6 +45,7 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/toko/user/{userId}', 'findByUser');
             Route::get('/toko/{tokoId}', 'findById');
             Route::post('/toko', 'create');
+            Route::get('/toko/pegawai/{userId}', 'getTokoPegawai');
         });
 
         Route::controller(LayananController::class)->group(function () {
@@ -100,11 +101,24 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/transaksi/history/toko/{id}', 'getHistoryByTokoId');
             Route::get('/transaksi/{orderNumber}', 'findByOrderNumber');
             Route::post('/transaksi', 'create');
+            Route::patch('/transaksi/{orderNumber}/{status}', 'prosesTransaksi');
         });
 
         Route::controller(\App\Http\Controllers\PegawaiController::class)->group(function () {
             Route::get('/pegawai/toko/{id}', 'getByTokoId');
             Route::post('/pegawai', 'create');
+        });
+
+        Route::controller(\App\Http\Controllers\PaymentController::class)->group(function () {
+           Route::get('/get-payment-method', 'getPaymentMethod');
+        });
+
+        Route::controller(\App\Http\Controllers\DashboardController::class)->group(function () {
+            Route::get('/get-top-transaksi-pelanggan/{tokoId}', 'getTopPelanggan');
+            Route::get('/get-status-transaksi/{tokoId}', 'getStatusTransaksi');
+            Route::get('/get-nominal-transaksi/{tokoId}', 'nominalTransaksiBulan');
+            Route::get('/get-transaksi-harian/{tokoId}', 'transaksiHarian');
+            Route::get('/get-chart-dashboard/{tokoId}', 'chartDashboard');
         });
     });
 });

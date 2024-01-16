@@ -21,4 +21,9 @@ class UserHasTokoRepository
             ]);
         }])->where('toko_id', $tokoId)->get();
     }
+
+    public function findByUserId($user_id)
+    {
+        return UserHasToko::with('toko')->where('user_id', $user_id)->first();
+    }
 }
