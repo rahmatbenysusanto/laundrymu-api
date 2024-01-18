@@ -34,8 +34,8 @@ class CreateToko extends FormRequest
             "kecamatan"     => "required",
             "kelurahan"     => "required",
             "kode_pos"      => "required",
-            "lat"           => "required",
-            "long"          => "required",
+//            "lat"           => "required",
+//            "long"          => "required",
         ];
     }
 

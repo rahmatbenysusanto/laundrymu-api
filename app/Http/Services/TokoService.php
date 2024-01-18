@@ -3,13 +3,17 @@
 namespace App\Http\Services;
 
 use App\Http\Repository\DiskonRepository;
+use App\Http\Repository\LisensiRepository;
 use App\Http\Repository\ParfumRepository;
+use App\Http\Repository\PembayaranOutletRepository;
 use App\Http\Repository\PembayaranRepository;
 use App\Http\Repository\PengirimanRepository;
 use App\Http\Repository\StatusTransaksiHasTokoRepository;
 use App\Http\Repository\TokoRepository;
+use App\Http\Repository\TransaksiHasTokoRepository;
 use App\Http\Repository\UserHasTokoRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 
 class TokoService
 {
@@ -20,7 +24,10 @@ class TokoService
         protected DiskonRepository $diskonRepository,
         protected PengirimanRepository $pengirimanRepository,
         protected UserHasTokoRepository $userHasTokoRepository,
-        protected StatusTransaksiHasTokoRepository $statusTransaksiHasTokoRepository
+        protected StatusTransaksiHasTokoRepository $statusTransaksiHasTokoRepository,
+        protected TransaksiHasTokoRepository $transaksiHasTokoRepository,
+        protected PembayaranOutletRepository $pembayaranOutletRepository,
+        protected LisensiRepository $lisensiRepository
     ){}
 
     public function getAll(): Collection
@@ -40,13 +47,15 @@ class TokoService
 
     public function create($request): void
     {
+        $lisensi = $this->lisensiRepository->findById($request->post('lisensi_id'));
+
         $data = [
             "user_id"   => $request->post("user_id"),
             "nama"      => $request->post("nama"),
             "no_hp"     => $request->post("no_hp"),
-            "logo"      => $request->post("logo"),
-            "status"    => "active",
-            "expired"   => date('Y-m-d', strtotime('+1 month')),
+            "logo"      => 'default.png',
+            "status"    => "inactive",
+            "expired"   => date('Y-m-d H:i:s', time()),
             "alamat"    => $request->post("alamat"),
             "provinsi"  => $request->post("provinsi"),
             "kabupaten" => $request->post("kabupaten"),
@@ -89,10 +98,49 @@ class TokoService
             'diproses'  => 0,
             'selesai'   => 0
         ]);
+
+        $this->transaksiHasTokoRepository->create([
+            'toko_id'           => $create->id,
+            'jumlah_transaksi'  => 0,
+            'nominal_transaksi' => 0,
+            'waktu'             => date('Y-m-d H:i:s', time())
+        ]);
+
+        $this->pembayaranOutletRepository->create([
+            'toko_id'               => $create->id,
+            'user_id'               => $request->post("user_id"),
+            'nomor_pembayaran'      => date('Ymds', time()).rand(100, 999),
+            'lisensi_id'            => $request->post('lisensi_id'),
+            'metode_pembayaran_id'  => $request->post('metode_pembayaran_id'),
+            'status'                => 'no transfer',
+            'keterangan'            => 'Pembuatan Outlet Baru',
+            'before'                => date('Y-m-d H:i:s', time()),
+            'after'                 => date('Y-m-d', strtotime('+'.$lisensi->durasi.' month'))
+        ]);
     }
 
     public function getTokoPegawai($user_id)
     {
         return $this->userHasTokoRepository->findByUserId($user_id);
+    }
+
+    public function historiPembayaranOutlet($user_id)
+    {
+        return $this->pembayaranOutletRepository->findByUserId($user_id);
+    }
+
+    public function getDetailPembayaran($nomor_pembayaran)
+    {
+        return $this->pembayaranOutletRepository->findByNomorPembayaran($nomor_pembayaran);
+    }
+
+    public function uploadBuktiPembayaran($id, $bukti_transfer): void
+    {
+        Log::info($id);
+        Log::info($bukti_transfer);
+        $this->pembayaranOutletRepository->update($id, [
+            'bukti_transfer'    => $bukti_transfer,
+            'status'            => 'menunggu pengecekan'
+        ]);
     }
 }

@@ -58,4 +58,31 @@ class TokoController extends Controller
             return $this->responseService->responseErrors(false, 'Create Toko Error', $err->getMessage(), 400);
         }
     }
+
+    public function historiPembayaranOutlet($user_id): JsonResponse
+    {
+        $pembayaranOutlet = $this->tokoService->historiPembayaranOutlet($user_id);
+
+        return $this->responseService->responseWithData(true, "Get histori pembayaran outlet success", $pembayaranOutlet, 200);
+    }
+
+    public function detailPembayaran($nomor_pembayaran): JsonResponse
+    {
+        $pembayaranOutlet = $this->tokoService->getDetailPembayaran($nomor_pembayaran);
+
+        return $this->responseService->responseWithData(true, "Get histori pembayaran outlet success", $pembayaranOutlet, 200);
+    }
+
+    public function uploadBuktiPembayaran(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->tokoService->uploadBuktiPembayaran($request->post('id'), $request->post('image'));
+            DB::commit();
+            return $this->responseService->responseNotData(true, 'Upload bukti pembayaran successfully', 200);
+        } catch (\Exception $err) {
+            DB::rollBack();
+            return $this->responseService->responseErrors(false, 'Upload bukti pembayaran failed', $err->getMessage(), 400);
+        }
+    }
 }

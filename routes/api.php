@@ -46,6 +46,9 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/toko/{tokoId}', 'findById');
             Route::post('/toko', 'create');
             Route::get('/toko/pegawai/{userId}', 'getTokoPegawai');
+            Route::get('/toko/histori-pembayaran-outlet/{userId}', 'historiPembayaranOutlet');
+            Route::get('/toko/get-detail-pembayaran/{nomorPembayaran}', 'detailPembayaran');
+            Route::post('/toko/upload-bukti-pembayaran', 'uploadBuktiPembayaran');
         });
 
         Route::controller(LayananController::class)->group(function () {
@@ -119,6 +122,22 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/get-nominal-transaksi/{tokoId}', 'nominalTransaksiBulan');
             Route::get('/get-transaksi-harian/{tokoId}', 'transaksiHarian');
             Route::get('/get-chart-dashboard/{tokoId}', 'chartDashboard');
+        });
+
+        Route::controller(\App\Http\Controllers\KodePosController::class)->group(function () {
+            Route::get('/get-provinsi', 'getProvinsi');
+            Route::get('/get-kota', 'getKota');
+            Route::get('/get-kecamatan', 'getKecamatan');
+            Route::get('/get-kelurahan', 'getKelurahan');
+            Route::get('/get-kode-pos', 'getKodePos');
+        });
+
+        Route::controller(\App\Http\Controllers\LisensiController::class)->group(function () {
+            Route::get('/get-lisensi', 'get');
+        });
+
+        Route::controller(\App\Http\Controllers\MetodePembayaranController::class)->group(function () {
+            Route::get('/get-metode-pembayaran', 'get');
         });
     });
 });
