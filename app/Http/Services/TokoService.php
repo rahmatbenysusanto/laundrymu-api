@@ -12,6 +12,7 @@ use App\Http\Repository\StatusTransaksiHasTokoRepository;
 use App\Http\Repository\TokoRepository;
 use App\Http\Repository\TransaksiHasTokoRepository;
 use App\Http\Repository\UserHasTokoRepository;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -136,11 +137,28 @@ class TokoService
 
     public function uploadBuktiPembayaran($id, $bukti_transfer): void
     {
-        Log::info($id);
-        Log::info($bukti_transfer);
         $this->pembayaranOutletRepository->update($id, [
             'bukti_transfer'    => $bukti_transfer,
             'status'            => 'menunggu pengecekan'
+        ]);
+    }
+
+    public function konfirmasiPembayaran($id): void
+    {
+        $this->pembayaranOutletRepository->update($id, [
+            'status'            => 'transfer'
+        ]);
+
+        $pembayaran = $this->pembayaranOutletRepository->findById($id);
+        $lisensi = $this->lisensiRepository->findById($pembayaran->lisensi_id);
+        $toko = $this->tokoRepository->findById($pembayaran->toko_id);
+
+        Log::info(Carbon::create('2021-01-01')->addMonth(1));
+
+
+        $this->tokoRepository->update($pembayaran->toko_id, [
+            'status'    => 'active',
+            'expired'   => Carbon::create($toko->expired)->addMonth($lisensi->durasi)
         ]);
     }
 }

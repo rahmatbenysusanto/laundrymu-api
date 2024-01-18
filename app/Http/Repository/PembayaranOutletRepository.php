@@ -80,4 +80,9 @@ class PembayaranOutletRepository
             ]);
         }])->where('nomor_pembayaran', $nomor_pembayaran)->first();
     }
+
+    public function findById($id)
+    {
+        return PembayaranOutlet::where('id', $id)->first();
+    }
 }

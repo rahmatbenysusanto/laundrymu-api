@@ -85,4 +85,17 @@ class TokoController extends Controller
             return $this->responseService->responseErrors(false, 'Upload bukti pembayaran failed', $err->getMessage(), 400);
         }
     }
+
+    public function konfirmasiPembayaran($id): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->tokoService->konfirmasiPembayaran($id);
+            DB::commit();
+            return $this->responseService->responseNotData(true, 'Konfirmasi pembayaran successfully', 200);
+        } catch (\Exception $err) {
+            DB::rollBack();
+            return $this->responseService->responseErrors(false, 'Konfirmasi pembayaran failed', $err->getMessage(), 400);
+        }
+    }
 }

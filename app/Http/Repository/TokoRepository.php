@@ -26,4 +26,9 @@ class TokoRepository
     {
         return Toko::create($data);
     }
+
+    public function update($id, $data): void
+    {
+        Toko::where('id', $id)->update($data);
+    }
 }
