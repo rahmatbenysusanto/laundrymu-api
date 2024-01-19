@@ -50,6 +50,7 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/toko/get-detail-pembayaran/{nomorPembayaran}', 'detailPembayaran');
             Route::post('/toko/upload-bukti-pembayaran', 'uploadBuktiPembayaran');
             Route::patch('/toko/konfirmasi-pembayaran/{id}', 'konfirmasiPembayaran');
+            Route::post('/toko/perpanjang-lisensi', 'perpanjangLisensi');
         });
 
         Route::controller(LayananController::class)->group(function () {

@@ -161,4 +161,19 @@ class TokoService
             'expired'   => Carbon::create($toko->expired)->addMonth($lisensi->durasi)
         ]);
     }
+
+    public function perpanjangLisensi($request): void
+    {
+        $this->pembayaranOutletRepository->create([
+            'toko_id'               => $request->post('toko_id'),
+            'user_id'               => $request->post("user_id"),
+            'nomor_pembayaran'      => date('Ymds', time()).rand(100, 999),
+            'lisensi_id'            => $request->post('lisensi_id'),
+            'metode_pembayaran_id'  => $request->post('metode_pembayaran_id'),
+            'status'                => 'no transfer',
+            'keterangan'            => 'Perpanjang lisensi outlet',
+            'before'                => '',
+            'after'                 => ''
+        ]);
+    }
 }

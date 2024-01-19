@@ -98,4 +98,17 @@ class TokoController extends Controller
             return $this->responseService->responseErrors(false, 'Konfirmasi pembayaran failed', $err->getMessage(), 400);
         }
     }
+
+    public function perpanjangLisensi(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->tokoService->perpanjangLisensi($request);
+            DB::commit();
+            return $this->responseService->responseNotData(true, 'Perpanjang lisensi outlet successfully', 200);
+        } catch (\Exception $err) {
+            DB::rollBack();
+            return $this->responseService->responseErrors(false, 'Perpanjang lisensi outlet failed', $err->getMessage(), 400);
+        }
+    }
 }
