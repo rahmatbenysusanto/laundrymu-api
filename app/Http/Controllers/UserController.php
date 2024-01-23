@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repository\TokoRepository;
 use App\Http\Requests\User\CreateUser;
 use App\Http\Requests\User\GenerateToken;
 use App\Http\Requests\User\LoginUser;
 use App\Http\Services\ResponseService;
+use App\Http\Services\TokoService;
 use App\Http\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -16,7 +18,8 @@ class UserController extends Controller
 {
     public function __construct(
         protected ResponseService $responseService,
-        protected UserService $userService
+        protected UserService $userService,
+        protected TokoService $tokoService
     ) {}
 
     public function index(): JsonResponse
@@ -58,5 +61,33 @@ class UserController extends Controller
     {
         $result = $this->userService->generateNewToken(1);
         return $this->responseService->responseWithData(true, 'Login sukses', $result, 200);
+    }
+
+    public function verifikasiOTP(Request $request): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->userService->verifikasiOTP($request->post('user_id'), $request->post('otp'));
+            DB::commit();
+            return $this->responseService->responseNotData(true, 'Verifikasi OTP successfully', 200);
+        } catch (\Exception $err) {
+            Log::channel('user')->error($err->getMessage());
+            DB::rollBack();
+            return $this->responseService->responseErrors(false, 'Verifikasi OTP Failed', $err->getMessage(), 400);
+        }
+    }
+
+    public function generateNewOTP($user_id): JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->userService->generateNewOTP($user_id);
+            DB::commit();
+            return $this->responseService->responseNotData(true, 'Generate New OTP successfully', 200);
+        } catch (\Exception $err) {
+            Log::channel('user')->error($err->getMessage());
+            DB::rollBack();
+            return $this->responseService->responseErrors(false, 'Generate New  OTP Failed', $err->getMessage(), 400);
+        }
     }
 }

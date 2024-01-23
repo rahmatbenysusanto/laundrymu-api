@@ -3,8 +3,11 @@
 namespace App\Http\Services;
 
 use App\Http\Repository\HistoriStatusTransaksiRepository;
+use App\Http\Repository\LayananRepository;
+use App\Http\Repository\ParfumRepository;
 use App\Http\Repository\PelangganHasTransaksiRepository;
 use App\Http\Repository\StatusTransaksiHasTokoRepository;
+use App\Http\Repository\TokoRepository;
 use App\Http\Repository\TransaksiDetailRepository;
 use App\Http\Repository\TransaksiHasTokoRepository;
 use App\Http\Repository\TransaksiRepository;
@@ -19,7 +22,10 @@ class TransaksiService
         protected HistoriStatusTransaksiRepository $historiStatusTransaksiRepository,
         protected PelangganHasTransaksiRepository $pelangganHasTransaksiRepository,
         protected StatusTransaksiHasTokoRepository $statusTransaksiHasTokoRepository,
-        protected TransaksiHasTokoRepository $transaksiHasTokoRepository
+        protected TransaksiHasTokoRepository $transaksiHasTokoRepository,
+        protected TokoRepository $tokoRepository,
+        protected LayananRepository $layananRepository,
+        protected ParfumRepository $parfumRepository
     ) {}
 
     public function list($toko_id): \Illuminate\Database\Eloquent\Collection|array
@@ -43,13 +49,14 @@ class TransaksiService
 
     public function create($request): void
     {
+        $order_number = date('mdis').rand(100, 999);
         $transaksi = $this->transaksiRepository->create([
             "toko_id"           => $request->toko_id,
             "pelanggan_id"      => $request->pelanggan_id,
             "diskon_id"         => $request->diskon_id,
             "pengiriman_id"     => $request->pengiriman_id,
             "pembayaran_id"     => $request->pembayaran_id,
-            "order_number"      => date('Ymdis').rand(100, 999),
+            "order_number"      => $order_number,
             "status"            => "baru",
             "status_pembayaran" => $request->status_pembayaran,
             "harga"             => $request->harga,
@@ -90,8 +97,50 @@ class TransaksiService
             ]);
         }
 
+        // WhatsApp Notifikasi
+        $toko = $this->tokoRepository->findById($request->toko_id);
         $pelanggan = $this->pelangganService->findById($request->pelanggan_id);
-        $this->notificationService->whatsAppNotification($pelanggan->no_hp, '');
+        $parfum = $this->parfumRepository->findById($request->parfum_id);
+
+$message = "*[".strtoupper($toko->nama)." - NOTA]*
+
+*No Transaksi:* ".$order_number."
+*Nama:* ".$pelanggan->nama."
+*No HP:* ".$pelanggan->no_hp."
+*Tanggal:* ".tanggal_jam_indo(date('Y-m-d H:i:s'), time())."
+*Parfum:* ".$parfum->nama.' | Rp. '.number_format($parfum->harga,0,',','.')."
+*Note:* -
+
+*Layanan* :
+
+";
+$dataLayanan = $request->layanan;
+$no = 1;
+for ($i = 0; $i < count($request->layanan); $i++) {
+    $layanan = $this->layananRepository->findById($dataLayanan[$i]['id']);
+    if ($layanan->type == "berat") {
+$message = $message.$no++.")".$layanan->nama." : ".$dataLayanan[$i]['jumlah']." Kg x Rp.".number_format($layanan->harga,0,',','.')." = Rp.".number_format($dataLayanan[$i]['harga'] * $dataLayanan[$i]['jumlah'])."
+";
+    } else {
+$message = $message.$no++.")".$layanan->nama." : ".$dataLayanan[$i]['jumlah']." Pcs x Rp.".number_format($layanan->harga,0,',','.')." = Rp.".number_format($dataLayanan[$i]['harga'] * $dataLayanan[$i]['jumlah'])."
+";
+    }
+}
+
+$message = $message ."
+*Harga:* Rp. ".number_format($request->harga,0,',','.')."
+*Diskon:* Rp. ".number_format($request->total_diskon,0,',','.')."
+*Total Harga:* Rp. ".number_format($request->total_harga,0,',','.')."
+
+*Pembayaran:* ".$request->status_pembayaran."
+*Diterima Oleh:* Admin
+
+Terima kasih,
+*".$toko->nama."*"
+;
+
+        $pelanggan = $this->pelangganService->findById($request->pelanggan_id);
+        $this->notificationService->whatsAppNotification($pelanggan->no_hp, $message);
     }
 
     public function prosesTransaksi($order_number, $status): void
@@ -118,6 +167,14 @@ class TransaksiService
                  ];
                  $this->statusTransaksiHasTokoRepository->decrement($transaksi->toko_id, 'diproses');
                  $this->statusTransaksiHasTokoRepository->increment($transaksi->toko_id, 'selesai');
+
+$message = "
+Selamat ".$this->notificationService->ucapanSelamat()." ".$transaksi->pelanggan->nama.", laundry anda dengan nomor transaksi ".$transaksi->order_number." sudah selesai.
+Silahkan ambil laundry anda ke outlet kami,
+
+Terimakasih.
+";
+                 $this->notificationService->whatsAppNotification($transaksi->pelanggan->no_hp, trim($message));
                  break;
              case "diambil":
                  $data = [

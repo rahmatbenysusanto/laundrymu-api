@@ -33,6 +33,8 @@ Route::middleware([ApiKey::class])->group(function () {
         Route::post('/user/register', 'create');
         Route::post('/user/login', 'login');
         Route::get('/user/generate-new-token/{id}', 'generateNewToken');
+        Route::post('/verifikasi-otp', 'verifikasiOTP');
+        Route::get('/generate-new-otp/{userId}', 'generateNewOTP');
     });
 
     Route::middleware([TokenJWT::class])->group(function () {
@@ -112,6 +114,10 @@ Route::middleware([ApiKey::class])->group(function () {
         Route::controller(\App\Http\Controllers\PegawaiController::class)->group(function () {
             Route::get('/pegawai/toko/{id}', 'getByTokoId');
             Route::post('/pegawai', 'create');
+            Route::post('/absen-pegawai', 'createAbsen');
+            Route::get('/data-absen-pegawai/{tokoId}', 'findAbsensiPegawai');
+            Route::get('/absen-pegawai/{pegawai_id}', 'findByPegawaiId');
+            Route::get('/absen-pegawai/{pegawai_id}/{start}/{selesai}', 'findByPegawaiIdCustomDate');
         });
 
         Route::controller(\App\Http\Controllers\PaymentController::class)->group(function () {

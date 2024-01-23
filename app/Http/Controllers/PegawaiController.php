@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\AbsenPegawaiService;
 use App\Http\Services\PegawaiService;
 use App\Http\Services\ResponseService;
 use Illuminate\Http\Request;
@@ -12,7 +13,8 @@ class PegawaiController extends Controller
 {
     public function __construct(
         protected ResponseService $responseService,
-        protected PegawaiService $pegawaiService
+        protected PegawaiService $pegawaiService,
+        protected AbsenPegawaiService $absenPegawaiService
     ){}
 
     public function getByTokoId($toko_id): \Illuminate\Http\JsonResponse
@@ -33,5 +35,42 @@ class PegawaiController extends Controller
             DB::rollBack();
             return $this->responseService->responseErrors(false, 'Create pegawai failed', $err->getMessage(), 400);
         }
+    }
+
+    public function createAbsen(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->absenPegawaiService->create(
+                $request->post('toko_id'),
+                $request->post('pegawai_id'),
+                $request->post('status'),
+                $request->post('tanggal'),
+                $request->post('keterangan')
+            );
+            DB::commit();
+            return $this->responseService->responseNotData(true, 'Create absensi success', 201);
+        } catch (\Exception $err) {
+            DB::rollBack();
+            return $this->responseService->responseNotData(false, 'Create absensi failed', 400);
+        }
+    }
+
+    public function findAbsensiPegawai($toko_id): \Illuminate\Http\JsonResponse
+    {
+        $result = $this->absenPegawaiService->findAbsensiPegawai($toko_id);
+        return $this->responseService->responseWithData(true, 'Get pegawai by toko successfully', $result, 200);
+    }
+
+    public function findByPegawaiId($pegawai_id): \Illuminate\Http\JsonResponse
+    {
+        $result = $this->absenPegawaiService->findByPegawaiId($pegawai_id);
+        return $this->responseService->responseWithData(true, 'Get pegawai by id successfully', $result, 200);
+    }
+
+    public function findByPegawaiIdCustomDate($pegawai_id, $mulai, $selesai): \Illuminate\Http\JsonResponse
+    {
+        $result = $this->absenPegawaiService->findByPegawaiIdCustomDate($pegawai_id, $mulai, $selesai);
+        return $this->responseService->responseWithData(true, 'Get pegawai by id successfully', $result, 200);
     }
 }
