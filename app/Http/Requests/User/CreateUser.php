@@ -28,8 +28,8 @@ class CreateUser extends FormRequest
     {
         return [
             "nama"      => "required|max:255",
-            "no_hp"     => "required|max:13|unique:Users,no_hp",
-            "email"     => "required|unique:Users,email",
+            "no_hp"     => "required|max:13",
+            "email"     => "required",
             "role"      => "required|string",
             "password"  => "required"
         ];

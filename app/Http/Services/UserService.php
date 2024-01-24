@@ -38,6 +38,13 @@ class UserService
 
     public function create($request): void
     {
+        if ($this->userRepository->findByEmail($request->email) != null) {
+            abort(400, 'Email sudah pernah digunakan');
+        }
+
+        if ($this->userRepository->findByNoHp($request->no_hp) != null) {
+            abort(400, 'No HP sudah pernah digunakan');
+        }
         $otp = rand(1000, 9999);
         $user = $this->userRepository->create([
             'nama'      => $request->nama,
@@ -106,12 +113,11 @@ class UserService
             'waktu'             => date('Y-m-d H:i:s', time())
         ]);
 
-$message = "Hallo ".$request->post('nama')." terimakasih telah mendaftar di aplikasi LaundryMu. :)
+$message = "Hallo ".$request->post('nama').", terimakasih telah mendaftar di aplikasi LaundryMu. :)
 
-Silahkan melakukan login dan masukan kode OTP berikut ini
-untuk menyelesaikan proses pendaftaran Anda.
+Silahkan melakukan login dan masukan kode OTP berikut ini untuk menyelesaikan proses pendaftaran Anda.
 
-*".$otp."*.
+*".$otp."*
 
 Harap jangan infokan kode OTP ini kepada siapapun.
 
