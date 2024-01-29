@@ -47,6 +47,17 @@ class TransaksiRepository
                         'nama',
                         'harga'
                     ]);
+                }, 'transaksiDetail' => function ($transaksiDetail) {
+                    $transaksiDetail->select([
+                        'id',
+                        'transaksi_id',
+                        'layanan_id'
+                    ]);
+                }, 'transaksiDetail.layanan' => function ($layanan) {
+                    $layanan->select([
+                       'id',
+                       'nama'
+                    ]);
                 }
             ])
             ->where('toko_id', $toko_id)

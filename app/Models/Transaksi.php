@@ -36,4 +36,9 @@ class Transaksi extends Model
     {
         return $this->hasMany(HistoriStatusTransaksi::class);
     }
+
+    public function transaksiDetail(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(TransaksiDetail::class);
+    }
 }
