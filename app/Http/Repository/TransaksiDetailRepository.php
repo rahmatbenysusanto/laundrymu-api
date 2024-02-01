@@ -18,6 +18,6 @@ class TransaksiDetailRepository
 
     public function findByTransaksiId($transaksi_id): \Illuminate\Database\Eloquent\Collection|array
     {
-        return TransaksiDetail::with('layanan')->where('transaksi_id', $transaksi_id)->get();
+        return TransaksiDetail::with('layanan', 'parfum')->where('transaksi_id', $transaksi_id)->get();
     }
 }
