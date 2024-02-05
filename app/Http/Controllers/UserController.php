@@ -59,7 +59,7 @@ class UserController extends Controller
 
     public function generateNewToken($user_id): JsonResponse
     {
-        $result = $this->userService->generateNewToken(1);
+        $result = $this->userService->generateNewToken($user_id);
         return $this->responseService->responseWithData(true, 'Login sukses', $result, 200);
     }
 

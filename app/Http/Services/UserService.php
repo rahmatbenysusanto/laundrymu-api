@@ -165,11 +165,29 @@ Terima kasih.
     public function generateNewToken($user_id): array
     {
         $user = $this->userRepository->findById($user_id);
+
+        $issuedAt   = new DateTimeImmutable();
+        $payload = [
+            'iss' => 'laundrymu-api',
+            'aud' => $user->email,
+            'iat' => $issuedAt->getTimestamp(),
+            'nbf' => $issuedAt->getTimestamp(),
+            'data'=> [
+                'id'    => $user->id,
+                'email' => $user->email,
+                'role'  => $user->role
+            ]
+        ];
+
         return [
-            'id'    => $user->id,
-            'nama'  => $user->nama,
-            'no_hp' => $user->no_hp,
-            'role'  => $user->role
+            'user'  => [
+                'id'    => $user->id,
+                'nama'  => $user->nama,
+                'no_hp' => $user->no_hp,
+                'role'  => $user->role,
+                'status'=> $user->status
+            ],
+            'token' => $this->authService->generateTokenJWT($payload)
         ];
     }
 

@@ -6,6 +6,7 @@ use App\Http\Repository\PelangganRepository;
 use App\Http\Repository\StatusTransaksiHasTokoRepository;
 use App\Http\Repository\TransaksiHasTokoRepository;
 use App\Http\Repository\TransaksiRepository;
+use Illuminate\Support\Facades\Log;
 
 class DashboardService
 {
@@ -28,7 +29,19 @@ class DashboardService
 
     public function nominalTransaksiBulan($toko_id)
     {
-        return $this->transaksiHasTokoRepository->findByTokoIdAndMonth($toko_id);
+        $result =  $this->transaksiHasTokoRepository->findByTokoIdAndMonth($toko_id);
+        if ($result == null) {
+            $this->transaksiHasTokoRepository->create([
+                'toko_id'   =>  $toko_id,
+                'jumlah'    => 0,
+                'nominal'   => 0,
+                'waktu'     => date('Y-m-d H:i:s', time())
+            ]);
+
+            return $this->transaksiHasTokoRepository->findByTokoIdAndMonth($toko_id);
+        }
+
+        return $result;
     }
 
     public function transaksiHarian($toko_id): array
