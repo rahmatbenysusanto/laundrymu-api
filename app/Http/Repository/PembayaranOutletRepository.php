@@ -32,9 +32,12 @@ class PembayaranOutletRepository
                 'id',
                 'metode_pembayaran',
                 'nama',
-                'nomor'
+                'nomor',
+                'logo'
             ]);
-        }])->where('user_id', $user_id)->get();
+        }])->where('user_id', $user_id)
+            ->orderBy('id', 'DESC')
+            ->get();
     }
 
     public function update($id, $data): void
