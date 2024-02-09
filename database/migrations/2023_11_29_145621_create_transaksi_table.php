@@ -24,6 +24,7 @@ return new class extends Migration
             $table->decimal('harga', 13, 0);
             $table->decimal('harga_diskon', 13, 0);
             $table->decimal('total_harga', 13, 0);
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }

@@ -61,7 +61,8 @@ class TransaksiService
             "status_pembayaran" => $request->status_pembayaran,
             "harga"             => $request->harga,
             "harga_diskon"      => $request->harga_diskon,
-            "total_harga"       => $request->total_harga
+            "total_harga"       => $request->total_harga,
+            "catatan"           => $request->catatan
         ]);
 
         foreach ($request->layanan as $layanan) {
@@ -107,9 +108,9 @@ $message = "*[".strtoupper($toko->nama)." - NOTA]*
 *No Transaksi:* ".$order_number."
 *Nama:* ".$pelanggan->nama."
 *No HP:* ".$pelanggan->no_hp."
-*Tanggal:* ".tanggal_jam_indo(date('Y-m-d H:i:s'), time())."
+*Tanggal:* ".tanggal_jam_indo(date('Y-m-d H:i'), time())."
 *Parfum:* ".$parfum->nama.' | Rp. '.number_format($parfum->harga,0,',','.')."
-*Note:* -
+*Note:* $request->catatan
 
 *Layanan* :
 
@@ -129,7 +130,7 @@ $message = $message.$no++.")".$layanan->nama." : ".$dataLayanan[$i]['jumlah']." 
 
 $message = $message ."
 *Harga:* Rp. ".number_format($request->harga,0,',','.')."
-*Diskon:* Rp. ".number_format($request->total_diskon,0,',','.')."
+*Diskon:* Rp. ".number_format($request->harga_diskon,0,',','.')."
 *Total Harga:* Rp. ".number_format($request->total_harga,0,',','.')."
 
 *Pembayaran:* ".$request->status_pembayaran."

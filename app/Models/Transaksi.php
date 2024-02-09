@@ -10,7 +10,7 @@ class Transaksi extends Model
 {
     use HasFactory;
     protected $table = 'transaksi';
-    protected $fillable = ['toko_id', 'pelanggan_id', 'diskon_id', 'pengiriman_id', 'pembayaran_id', 'order_number', 'status', 'status_pembayaran', 'harga', 'harga_diskon', 'total_harga'];
+    protected $fillable = ['toko_id', 'pelanggan_id', 'diskon_id', 'pengiriman_id', 'pembayaran_id', 'order_number', 'status', 'status_pembayaran', 'harga', 'harga_diskon', 'total_harga', 'catatan'];
 
     protected function serializeDate(DateTimeInterface $date): string
     {
