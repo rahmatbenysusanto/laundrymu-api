@@ -13,10 +13,12 @@ use App\Http\Repository\TokoRepository;
 use App\Http\Repository\TransaksiHasTokoRepository;
 use App\Http\Repository\UserHasTokoRepository;
 use App\Http\Repository\UserRepository;
+use App\Mail\LupaPassword;
 use DateTimeImmutable;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserService
 {
@@ -223,5 +225,57 @@ Terima kasih.
 
 *Laundrymu*";
         $this->notificationService->whatsAppNotification($user->no_hp, $message);
+    }
+
+    public function lupaPassword($email): void
+    {
+        $user = $this->userRepository->findByEmail($email);
+
+        if ($user == null) {
+            abort(400, "User tidak terdaftar");
+        }
+
+        $otp = rand(1000, 9999);
+        $this->userRepository->update($user->id, [
+            "otp"  => $otp,
+        ]);
+
+        $dataMail = [
+            "subject"   => "Lupa Password Laundrymu",
+            "title"     => "Permintaan Pergantian Sandi",
+            "text"      => "Hallo pelanggan Laundrymu, anda baru saya mengajukan lupa password pada sistem kami, silahkan tekan tombol dibawah untuk melanjutkan proses ganti password anda yang baru. Jika anda tidak merasa mengajukan ganti password harap hiraukan email ini dan segera laporkan kepada amin Laundrymu, Terimakasih",
+            "link"      => "https://mobile.laundrymu.id/lupa-password/".base64_encode($user->email),
+            "otp"       => $otp
+        ];
+
+        Mail::to($user->email)->send(new LupaPassword($dataMail));
+    }
+
+    public function checkValidateEmail($email): void
+    {
+        $result = $this->userRepository->findByEmail(base64_decode($email));
+        if ($result == null) {
+            abort(400, "User tidak ditemukan");
+        }
+    }
+
+    public function gantiPassword($request): void
+    {
+        $user = $this->userRepository->findByEmail($request->email);
+        if ($user->otp != $request->otp) {
+            abort(400, "OTP tidak sesuai, Silahkan cek kode OTP anda");
+        }
+
+        $this->userRepository->update($user->id, [
+            "password"  => Hash::make($request->password, ['rounds' => 12]),
+        ]);
+
+        $message = "Hallo ".$user->nama.", Kata sandi anda berhasil diperbarui, Silahkan login dengan sandi anda yang baru";
+        $this->notificationService->whatsAppNotification($user->no_hp, $message);
+    }
+
+    public function getAllUser()
+    {
+        return $this->userRepository->getAll();
     }
 }

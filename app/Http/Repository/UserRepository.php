@@ -35,4 +35,20 @@ class UserRepository
     {
         return User::where('id', $id)->update($data);
     }
+
+    public function getAll()
+    {
+        return User::select([
+                'id',
+                'nama',
+                'no_hp',
+                'email',
+                'otp',
+                'role',
+                'status',
+                'created_at'
+            ])
+            ->where('role', '!=', 'admin')
+            ->get();
+    }
 }

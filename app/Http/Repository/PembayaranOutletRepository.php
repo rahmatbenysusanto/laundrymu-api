@@ -40,6 +40,41 @@ class PembayaranOutletRepository
             ->get();
     }
 
+    public function findAll(): \Illuminate\Database\Eloquent\Collection|array
+    {
+        return PembayaranOutlet::with(['toko' => function ($toko) {
+            $toko->select([
+                'id',
+                'nama',
+                'no_hp'
+            ]);
+        }, 'user' => function ($user) {
+            $user->select([
+                'id',
+                'nama',
+                'no_hp'
+            ]);
+        }, 'lisensi' => function ($lisensi) {
+            $lisensi->select([
+                'id',
+                'nama',
+                'durasi',
+                'harga'
+            ]);
+        }, 'pembayaran' => function ($pembayaran) {
+            $pembayaran->select([
+                'id',
+                'metode_pembayaran',
+                'nama',
+                'nomor',
+                'logo'
+            ]);
+        }])
+            ->where('created_at', '>=', date('Y-m-d H:i:s', strtotime('-1 months')))
+            ->orderBy('id', 'DESC')
+            ->get();
+    }
+
     public function update($id, $data): void
     {
         PembayaranOutlet::where('id', $id)->update($data);

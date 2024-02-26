@@ -130,6 +130,11 @@ class TokoService
         return $this->pembayaranOutletRepository->findByUserId($user_id);
     }
 
+    public function historiPembayaranOutletAll(): Collection|array
+    {
+        return $this->pembayaranOutletRepository->findAll();
+    }
+
     public function getDetailPembayaran($nomor_pembayaran)
     {
         return $this->pembayaranOutletRepository->findByNomorPembayaran($nomor_pembayaran);

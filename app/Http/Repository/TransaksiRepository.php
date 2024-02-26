@@ -124,7 +124,7 @@ class TransaksiRepository
         return Transaksi::create($data);
     }
 
-    public function updateByOrderId($order_id, $data)
+    public function updateByOrderId($order_id, $data): void
     {
         Transaksi::where('order_number', $order_id)->update($data);
     }

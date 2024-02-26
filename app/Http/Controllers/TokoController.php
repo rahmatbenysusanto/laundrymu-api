@@ -111,4 +111,11 @@ class TokoController extends Controller
             return $this->responseService->responseErrors(false, 'Perpanjang lisensi outlet failed', $err->getMessage(), 400);
         }
     }
+
+    public function admin_historiPembayaranOutlet(): JsonResponse
+    {
+        $pembayaranOutlet = $this->tokoService->historiPembayaranOutletAll();
+
+        return $this->responseService->responseWithData(true, "Get histori pembayaran outlet success", $pembayaranOutlet, 200);
+    }
 }

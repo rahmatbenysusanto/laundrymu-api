@@ -108,7 +108,7 @@ $message = "*[".strtoupper($toko->nama)." - NOTA]*
 *No Transaksi:* ".$order_number."
 *Nama:* ".$pelanggan->nama."
 *No HP:* ".$pelanggan->no_hp."
-*Tanggal:* ".tanggal_jam_indo(date('Y-m-d H:i'), time())."
+*Tanggal:* ".tanggal_jam_indo(date('Y-m-d H:i:s'), time())."
 *Parfum:* ".$parfum->nama.' | Rp. '.number_format($parfum->harga,0,',','.')."
 *Note:* $request->catatan
 

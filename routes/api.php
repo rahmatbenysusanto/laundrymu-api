@@ -35,6 +35,10 @@ Route::middleware([ApiKey::class])->group(function () {
         Route::get('/user/generate-new-token/{id}', 'generateNewToken');
         Route::post('/verifikasi-otp', 'verifikasiOTP');
         Route::get('/generate-new-otp/{userId}', 'generateNewOTP');
+        Route::post('/lupa-kata-sandi', 'lupaKataSandi');
+        Route::get('/check-validate-email/{email}', 'checkValidateEmail');
+        Route::post('/ganti-password', 'gantiPassword');
+        Route::get('/user', 'getAllUser');
     });
 
     Route::middleware([TokenJWT::class])->group(function () {
@@ -53,6 +57,9 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::post('/toko/upload-bukti-pembayaran', 'uploadBuktiPembayaran');
             Route::patch('/toko/konfirmasi-pembayaran/{id}', 'konfirmasiPembayaran');
             Route::post('/toko/perpanjang-lisensi', 'perpanjangLisensi');
+
+            // Super Admin API
+            Route::get('/toko/super-admin/get-histori-pembayaran', 'admin_historiPembayaranOutlet');
         });
 
         Route::controller(LayananController::class)->group(function () {

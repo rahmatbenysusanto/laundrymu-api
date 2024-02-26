@@ -126,6 +126,22 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        'slackLog' => [
+            'driver' => 'slack',
+            'url' => env('LOG_SLACK_WEBHOOK_URL'),
+            'username' => 'Laundrymu API',
+            'emoji' => ':wave:',
+            'level' => 'error'
+        ],
+
+        'transaksi' => [
+            'driver'  => 'monolog',
+            'handler' => Monolog\Handler\FilterHandler::class,
+            'handler_with' => [
+                'handler' => new StreamHandler(storage_path('logs/transaksi.log')),
+            ],
+        ],
     ],
 
 ];
