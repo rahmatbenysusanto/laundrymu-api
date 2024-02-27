@@ -22,6 +22,12 @@ class TransaksiController extends Controller
         return $this->responseService->responseWithData(true, 'Get list transaksi successfully', $result, 200);
     }
 
+    public function getTransaksiByStatus($toko_id, $status): \Illuminate\Http\JsonResponse
+    {
+        $result = $this->transaksiService->getTransaksiByStatus($toko_id, $status);
+        return $this->responseService->responseWithData(true, 'Get list transaksi successfully', $result, 200);
+    }
+
     public function getHistoryByTokoId($toko_id): \Illuminate\Http\JsonResponse
     {
         $result = $this->transaksiService->getHistoryByTokoId($toko_id);

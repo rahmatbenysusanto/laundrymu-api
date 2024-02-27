@@ -66,6 +66,45 @@ class TransaksiRepository
             ->get();
     }
 
+    public function getTransaksiByStatus($toko_id, $status): \Illuminate\Database\Eloquent\Collection|array
+    {
+        return Transaksi::with(['pelanggan' => function ($pelanggan) {
+            $pelanggan->select([
+                'id',
+                'nama',
+                'no_hp'
+            ]);
+        }, 'pembayaran' => function ($pembayaran) {
+            $pembayaran->select([
+                'id',
+                'nama'
+            ]);
+        }, 'pengiriman' => function ($pengiriman) {
+            $pengiriman->select([
+                'id',
+                'nama',
+                'harga'
+            ]);
+        }, 'transaksiDetail' => function ($transaksiDetail) {
+            $transaksiDetail->select([
+                'id',
+                'transaksi_id',
+                'layanan_id'
+            ]);
+        }, 'transaksiDetail.layanan' => function ($layanan) {
+            $layanan->select([
+                'id',
+                'nama'
+            ]);
+        }
+        ])
+            ->where('created_at', '>', date('Y-m-d H:i:s', strtotime("-7 days")))
+            ->where('toko_id', $toko_id)
+            ->where('status', $status)
+            ->orderBy('id', 'DESC')
+            ->get();
+    }
+
     public function getHistoryByTokoId($toko_id): \Illuminate\Database\Eloquent\Collection|array
     {
         return Transaksi::with(['pelanggan' => function ($pelanggan) {

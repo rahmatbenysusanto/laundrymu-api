@@ -112,6 +112,7 @@ Route::middleware([ApiKey::class])->group(function () {
 
         Route::controller(\App\Http\Controllers\TransaksiController::class)->group(function () {
             Route::get('/transaksi/toko/{id}', 'list');
+            Route::get('/transaksi/toko/{id}/{status}', 'getTransaksiByStatus');
             Route::get('/transaksi/history/toko/{id}', 'getHistoryByTokoId');
             Route::get('/transaksi/{orderNumber}', 'findByOrderNumber');
             Route::post('/transaksi', 'create');

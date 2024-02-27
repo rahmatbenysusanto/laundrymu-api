@@ -33,6 +33,11 @@ class TransaksiService
         return $this->transaksiRepository->getByTokoId($toko_id);
     }
 
+    public function getTransaksiByStatus($toko_id, $status)
+    {
+        return $this->transaksiRepository->getTransaksiByStatus($toko_id, $status);
+    }
+
     public function getHistoryByTokoId($toko_id): \Illuminate\Database\Eloquent\Collection|array
     {
         return $this->transaksiRepository->getHistoryByTokoId($toko_id);

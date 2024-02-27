@@ -23,6 +23,13 @@ class LaporanRepository
 
     public function getAll(): \Illuminate\Database\Eloquent\Collection
     {
-        return Laporan::all();
+        return Laporan::with(['user' => function ($user) {
+            $user->select([
+                'id',
+                'nama',
+                'no_hp',
+                'email'
+            ]);
+        }])->get();
     }
 }
