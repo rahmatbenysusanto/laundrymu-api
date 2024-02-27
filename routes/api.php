@@ -154,6 +154,20 @@ Route::middleware([ApiKey::class])->group(function () {
         Route::controller(\App\Http\Controllers\MetodePembayaranController::class)->group(function () {
             Route::get('/get-metode-pembayaran', 'get');
         });
+
+        Route::controller(\App\Http\Controllers\ArtikelController::class)->group(function () {
+            Route::get('/get-artikel', 'getArtikel');
+            Route::get('/artikel-active', 'getArtikelActive');
+            Route::get('/artikel-limit', 'getArtikelLimit');
+            Route::post('/artikel', 'buatArtikel');
+        });
+
+        Route::controller(\App\Http\Controllers\LaporanController::class)->group(function () {
+            Route::get('/laporan', 'getAll');
+            Route::get('/laporan/{userId}', 'findById');
+            Route::post('/laporan', 'create');
+            Route::patch('/laporan', 'update');
+        });
     });
 });
 
