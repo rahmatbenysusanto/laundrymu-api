@@ -83,4 +83,11 @@ class BarangService
     {
         return $this->barangRepository->getStokByTokoId($tokoId);
     }
+
+    public function updateBarang($data): void
+    {
+        $this->barangRepository->update($data->id, [
+            "nama"  => $data->nama
+        ]);
+    }
 }

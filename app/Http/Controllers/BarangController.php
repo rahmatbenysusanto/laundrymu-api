@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Barang\Create;
 use App\Http\Requests\Barang\KurangiStok;
 use App\Http\Requests\Barang\TambahStok;
+use App\Http\Requests\Barang\UpdateBarang;
 use App\Http\Services\BarangService;
 use App\Http\Services\ResponseService;
 use Illuminate\Http\Request;
@@ -76,5 +77,19 @@ class BarangController extends Controller
     {
         $result = $this->barangService->listStokBarang($tokoId);
         return $this->responseService->responseWithData(true, 'Get stok barang successfully', $result, 200);
+    }
+
+    public function updateBarang(UpdateBarang $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->barangService->updateBarang($request);
+            DB::commit();
+            return $this->responseService->responseNotData(true, 'Update barang successfully', 200);
+        } catch (\Exception $err) {
+            DB::rollBack();
+            Log::channel('barang')->error($err->getMessage());
+            return $this->responseService->responseErrors(false, 'Update barang failed', $err->getMessage(), 400);
+        }
     }
 }

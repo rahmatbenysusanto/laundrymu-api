@@ -33,4 +33,9 @@ class BarangRepository
             ])
             ->get();
     }
+
+    public function update($id, $data): void
+    {
+        Barang::where('id', $id)->update($data);
+    }
 }

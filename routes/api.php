@@ -172,6 +172,7 @@ Route::middleware([ApiKey::class])->group(function () {
 
         Route::controller(\App\Http\Controllers\BarangController::class)->group(function () {
             Route::post('/barang', 'create');
+            Route::patch('/barang', 'updateBarang');
             Route::patch('/barang/tambah-stok', 'tambahStok');
             Route::patch('/barang/kurangi-stok', 'kurangiStok');
             Route::get('/barang/histori-pembelian/{tokoId}', 'historiPembelian');
