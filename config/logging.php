@@ -142,6 +142,14 @@ return [
                 'handler' => new StreamHandler(storage_path('logs/transaksi.log')),
             ],
         ],
+
+        'barang' => [
+            'driver'  => 'monolog',
+            'handler' => Monolog\Handler\FilterHandler::class,
+            'handler_with' => [
+                'handler' => new StreamHandler(storage_path('logs/barang.log')),
+            ],
+        ],
     ],
 
 ];
