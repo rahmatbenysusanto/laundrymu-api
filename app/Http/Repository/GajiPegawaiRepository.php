@@ -17,4 +17,9 @@ class GajiPegawaiRepository
             ->where("toko_id", $toko_id)
             ->get();
     }
+
+    public function findByPegawaiId($pegawaiId)
+    {
+        return GajiPegawai::where('pegawai_id', $pegawaiId)->get();
+    }
 }

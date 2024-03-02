@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repository\GajiPegawaiRepository;
+use App\Http\Requests\Gaji\Create;
 use App\Http\Services\AbsenPegawaiService;
+use App\Http\Services\GajiPegawaiService;
 use App\Http\Services\PegawaiService;
 use App\Http\Services\ResponseService;
 use Illuminate\Http\Request;
@@ -14,7 +17,8 @@ class PegawaiController extends Controller
     public function __construct(
         protected ResponseService $responseService,
         protected PegawaiService $pegawaiService,
-        protected AbsenPegawaiService $absenPegawaiService
+        protected AbsenPegawaiService $absenPegawaiService,
+        protected GajiPegawaiService $gajiPegawaiService
     ){}
 
     public function getByTokoId($toko_id): \Illuminate\Http\JsonResponse
@@ -72,5 +76,18 @@ class PegawaiController extends Controller
     {
         $result = $this->absenPegawaiService->findByPegawaiIdCustomDate($pegawai_id, $mulai, $selesai);
         return $this->responseService->responseWithData(true, 'Get pegawai by id successfully', $result, 200);
+    }
+
+    public function createGajiPegawai(Create $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->gajiPegawaiService->create($request);
+            DB::commit();
+            return $this->responseService->responseNotData(true, 'Create gaji successfully', 201);
+        } catch (\Exception $err) {
+            DB::rollBack();
+            return $this->responseService->responseErrors(false, 'Create gaji failed', $err->getMessage(), 400);
+        }
     }
 }
