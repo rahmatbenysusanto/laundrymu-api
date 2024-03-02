@@ -20,6 +20,7 @@ class PembelianRepository
             ]);
         }])
             ->where('toko_id', $tokoId)
+            ->orderBy('id', 'DESC')
             ->get();
     }
 }
