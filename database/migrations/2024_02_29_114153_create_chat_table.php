@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('chat', function (Blueprint $table) {
             $table->bigInteger('id')->autoIncrement();
-            $table->bigInteger('user_id');
+            $table->bigInteger('toko_id');
             $table->enum('role', ['client', 'admin']);
             $table->text('chat');
             $table->timestamps();

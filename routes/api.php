@@ -179,6 +179,11 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/barang/histori-penggunaan/{tokoId}', 'historiPenggunaan');
             Route::get('/barang/stok/{tokoId}', 'listStokBarang');
         });
+
+        Route::controller(\App\Http\Controllers\ChatController::class)->group(function () {
+            Route::post('/chat', 'create');
+            Route::get('/chat/{tokoId}', 'getChat');
+        });
     });
 });
 

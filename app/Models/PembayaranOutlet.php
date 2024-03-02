@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,11 @@ class PembayaranOutlet extends Model
     use HasFactory;
     protected $table = "pembayaran_outlet";
     protected $fillable = ["toko_id", "user_id", "nomor_pembayaran", "lisensi_id", "metode_pembayaran_id", "status", "bukti_transfer", "keterangan", "before", "after"];
+
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

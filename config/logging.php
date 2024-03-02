@@ -150,6 +150,14 @@ return [
                 'handler' => new StreamHandler(storage_path('logs/barang.log')),
             ],
         ],
+
+        'chat' => [
+            'driver'  => 'monolog',
+            'handler' => Monolog\Handler\FilterHandler::class,
+            'handler_with' => [
+                'handler' => new StreamHandler(storage_path('logs/chat.log')),
+            ],
+        ],
     ],
 
 ];
