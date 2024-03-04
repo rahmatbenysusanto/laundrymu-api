@@ -185,4 +185,37 @@ class TransaksiRepository
             ->whereYear('created_at', date('Y', time()))
             ->sum('total_harga');
     }
+
+    public function countTransaksiByStatusHariIni($toko_id, $status)
+    {
+        return Transaksi::where('status', $status)
+            ->where('toko_id', $toko_id)
+            ->whereDate('created_at', date('Y-m-d', time()))
+            ->count();
+    }
+
+    public function countTransaksiByStatusByDate($toko_id, $status, $start, $finish)
+    {
+        return Transaksi::where('status', $status)
+            ->where('toko_id', $toko_id)
+            ->where('created_at', '>=', $start)
+            ->where('created_at', '<=', $finish)
+            ->count();
+    }
+
+    public function countDiskon($toko_id, $diskon_id)
+    {
+        return Transaksi::where('toko_id', $toko_id)
+            ->where('diskon_id', $diskon_id)
+            ->whereDate('created_at', date('Y-m-d', time()))
+            ->count();
+    }
+
+    public function countPembayaran($toko_id, $pembayaran_id)
+    {
+        return Transaksi::where('toko_id', $toko_id)
+            ->where('pembayaran_id', $pembayaran_id)
+            ->whereDate('created_at', date('Y-m-d', time()))
+            ->count();
+    }
 }

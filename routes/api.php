@@ -184,6 +184,16 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::post('/chat', 'create');
             Route::get('/chat/{tokoId}', 'getChat');
         });
+
+        Route::controller(\App\Http\Controllers\LaporanTransaksiController::class)->group(function () {
+            Route::get('/laporan/transaksi-hari-ini/{tokoId}', 'ops_transaksi');
+            Route::get('/laporan/transaksi-by-date/{tokoId}/{start}/{finish}', 'ops_transaksiByDate');
+
+            Route::get('/laporan/layanan/{tokoId}', 'ops_layanan');
+            Route::get('/laporan/parfum/{tokoId}', 'ops_parfum');
+            Route::get('/laporan/diskon/{tokoId}', 'ops_diskon');
+            Route::get('/laporan/pembayaran/{tokoId}', 'ops_pembayaran');
+        });
     });
 });
 

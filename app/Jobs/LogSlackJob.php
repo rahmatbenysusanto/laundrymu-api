@@ -14,15 +14,17 @@ class LogSlackJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $error;
     protected $errorMessage;
 
-    public function __construct($errorMessage)
+    public function __construct($error, $errorMessage)
     {
+        $this->error = $error;
         $this->errorMessage = $errorMessage;
     }
 
     public function handle(): void
     {
-        Log::channel('slackLog')->error($this->errorMessage);
+        Log::channel('slackLog')->error($this->error.' Error Message : '.$this->errorMessage);
     }
 }

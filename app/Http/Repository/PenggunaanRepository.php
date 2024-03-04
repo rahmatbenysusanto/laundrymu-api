@@ -20,6 +20,7 @@ class PenggunaanRepository
             ]);
         }])
             ->where('toko_id', $tokoId)
+            ->orderBy('id', 'DESC')
             ->get();
     }
 }

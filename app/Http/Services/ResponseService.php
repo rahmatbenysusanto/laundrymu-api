@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Jobs\LogSlackJob;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -27,7 +28,7 @@ class ResponseService
     public function responseErrors($status, $message, $errors, $httpStatus): JsonResponse
     {
         // Record Log With Slack
-        Log::channel('slackLog')->error($errors);
+        dispatch(new LogSlackJob($message, $errors));
 
         return response()->json([
             "status"    => $status,
