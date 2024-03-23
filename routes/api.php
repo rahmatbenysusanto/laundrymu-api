@@ -138,6 +138,7 @@ Route::middleware([ApiKey::class])->group(function () {
             Route::get('/get-nominal-transaksi/{tokoId}', 'nominalTransaksiBulan');
             Route::get('/get-transaksi-harian/{tokoId}', 'transaksiHarian');
             Route::get('/get-chart-dashboard/{tokoId}', 'chartDashboard');
+            Route::get('/get-chart-dashboard-mobile/{tokoId}', 'chartDashboardMobile');
         });
 
         Route::controller(\App\Http\Controllers\KodePosController::class)->group(function () {

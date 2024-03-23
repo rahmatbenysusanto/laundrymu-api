@@ -41,4 +41,9 @@ class Transaksi extends Model
     {
         return $this->hasMany(TransaksiDetail::class);
     }
+
+    public function toko(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Toko::class);
+    }
 }

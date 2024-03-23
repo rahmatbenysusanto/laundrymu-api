@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Http\Repository\AbsenPegawaiRepository;
 use App\Http\Repository\UserHasTokoRepository;
+use Illuminate\Support\Carbon;
 
 class AbsenPegawaiService
 {

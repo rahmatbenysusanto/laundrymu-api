@@ -42,4 +42,10 @@ class DashboardController extends Controller
         $result = $this->dashboardService->chartDashboard($toko_id);
         return $this->responseService->responseWithData(true, 'Get Transaksi Harian Successfully', $result, 200);
     }
+
+    public function chartDashboardMobile($toko_id): \Illuminate\Http\JsonResponse
+    {
+        $result = $this->dashboardService->chartDashboardMobile($toko_id);
+        return $this->responseService->responseWithData(true, 'Get Transaksi Harian Successfully', $result, 200);
+    }
 }

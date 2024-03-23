@@ -3,6 +3,7 @@
 namespace App\Http\Repository;
 
 use App\Models\AbsenPegawai;
+use Illuminate\Support\Carbon;
 
 class AbsenPegawaiRepository
 {
@@ -44,8 +45,8 @@ class AbsenPegawaiRepository
         return AbsenPegawai::with("toko", "pegawai")
             ->where("pegawai_id", $pegawai_id)
             ->where('status', 'masuk')
-            ->whereMonth('tanggal', date('m', time()))
-            ->whereYear('tanggal', date('Y', time()))
+            ->where('tanggal', '>=', Carbon::now()->startOfMonth()->format('Y-m-d'))
+            ->where('tanggal', '<=', Carbon::now()->endOfMonth()->format('Y-m-d'))
             ->count();
     }
 

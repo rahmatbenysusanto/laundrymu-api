@@ -24,7 +24,10 @@ class DashboardService
 
     public function getStatusTransaksi($toko_id)
     {
-        return $this->statusTransaksiHasTokoRepository->findByTokoId($toko_id);
+        return [
+            'status'    => $this->statusTransaksiHasTokoRepository->findByTokoId($toko_id),
+            'diambil'   => $this->transaksiRepository->countTransaksiByStatusByDate($toko_id, 'diambil', date('Y-m-d', time()), date('Y-m-d', time()))
+        ];
     }
 
     public function nominalTransaksiBulan($toko_id)
@@ -74,6 +77,19 @@ class DashboardService
             $dataJumlah,
             $jumlahTransaksi,
             $nominalTransaksi
+        ];
+    }
+
+    public function chartDashboardMobile($toko_id): array
+    {
+        return [
+            $this->transaksiRepository->jumlahTransaksiByDate($toko_id, date('Y-m-d', strtotime('-7 day'))),
+            $this->transaksiRepository->jumlahTransaksiByDate($toko_id, date('Y-m-d', strtotime('-6 day'))),
+            $this->transaksiRepository->jumlahTransaksiByDate($toko_id, date('Y-m-d', strtotime('-5 day'))),
+            $this->transaksiRepository->jumlahTransaksiByDate($toko_id, date('Y-m-d', strtotime('-4 day'))),
+            $this->transaksiRepository->jumlahTransaksiByDate($toko_id, date('Y-m-d', strtotime('-3 day'))),
+            $this->transaksiRepository->jumlahTransaksiByDate($toko_id, date('Y-m-d', strtotime('-2 day'))),
+            $this->transaksiRepository->jumlahTransaksiByDate($toko_id, date('Y-m-d', strtotime('-1 day'))),
         ];
     }
 }

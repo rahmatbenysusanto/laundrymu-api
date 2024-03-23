@@ -152,6 +152,14 @@ class TransaksiRepository
                 'nama',
                 'harga'
             ]);
+        }, 'toko' => function ($toko) {
+            $toko->select([
+                'id',
+                'nama',
+                'no_hp',
+                'alamat',
+                'logo'
+            ]);
         },
             'historiStatusTransaksi'
         ])
@@ -171,18 +179,21 @@ class TransaksiRepository
     public function jumlahTransaksiHarian($toko_id)
     {
         return Transaksi::where('toko_id', $toko_id)
-            ->whereDay('created_at', date('d', time()))
-            ->whereMonth('created_at', date('m', time()))
-            ->whereYear('created_at', date('Y', time()))
+            ->whereDate('created_at', '=', date('Y-m-d', time()))
+            ->count();
+    }
+
+    public function jumlahTransaksiByDate($toko_id, $date)
+    {
+        return Transaksi::where('toko_id', $toko_id)
+            ->whereDate('created_at', '=', $date)
             ->count();
     }
 
     public function jumlahNominalHarian($toko_id)
     {
         return Transaksi::where('toko_id', $toko_id)
-            ->whereDay('created_at', date('d', time()))
-            ->whereMonth('created_at', date('m', time()))
-            ->whereYear('created_at', date('Y', time()))
+            ->whereDate('created_at', '=', date('Y-m-d', time()))
             ->sum('total_harga');
     }
 
