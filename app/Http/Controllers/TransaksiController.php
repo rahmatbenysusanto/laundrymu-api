@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Transaksi\CancelRequest;
+use App\Http\Requests\Transaksi\CreateRequest;
+use App\Http\Requests\Transaksi\UpdateStatusRequest;
 use App\Http\Service\TransaksiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +15,7 @@ class TransaksiController extends Controller
         protected TransaksiService $transaksiService
     ) {}
 
-    public function create(Request $request): \Illuminate\Http\JsonResponse
+    public function create(CreateRequest $request): \Illuminate\Http\JsonResponse
     {
         try {
             DB::beginTransaction();
@@ -32,11 +35,11 @@ class TransaksiController extends Controller
         }
     }
 
-    public function cancel($id): \Illuminate\Http\JsonResponse
+    public function cancel(CancelRequest $request): \Illuminate\Http\JsonResponse
     {
         try {
             DB::beginTransaction();
-            $this->transaksiService->cancel($id);
+            $this->transaksiService->cancel($request->query('id'));
             DB::commit();
             return response()->json([
                 'status'    => true,
@@ -52,7 +55,7 @@ class TransaksiController extends Controller
         }
     }
 
-    public function updateStatus(Request $request): \Illuminate\Http\JsonResponse
+    public function updateStatus(UpdateStatusRequest $request): \Illuminate\Http\JsonResponse
     {
         try {
             DB::beginTransaction();

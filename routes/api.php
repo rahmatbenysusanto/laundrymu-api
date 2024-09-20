@@ -50,7 +50,8 @@ Route::middleware(JwtMiddleware::class)->group(function () {
 
     Route::prefix('transaksi')->controller(TransaksiController::class)->group(function () {
         Route::post('/', 'create');
-        Route::patch('/cancel/{id}', 'cancel');
+        Route::patch('/cancel', 'cancel');
+        Route::patch('/', 'update');
     });
 
     Route::prefix('chat')->controller(ChatController::class)->group(function () {
