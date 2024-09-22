@@ -32,6 +32,12 @@ class NotificationService
             case 'transaksi selesai':
             case 'transaksi dipickup':
             case 'transaksi delivery':
+            case 'pembayaran flip':
+                $this->whatsappText($data['no_hp'], $this->pembayaranFlip($data['nama'], $data['link'], $data['no'], $data['tanggal']));
+                break;
+            case 'pembayaran outlet berhasil':
+                $this->whatsappText($data['no_hp'], $this->pembayaranOutletBerhasil($data['nama'], $data['tanggal'], $data['nominal']));
+                break;
         }
     }
 
@@ -139,6 +145,49 @@ Terima kasih!
 
         Salam hangat,
         Tim {$outlet->nama} 🌟
+        EOT;
+    }
+
+    private function pembayaranFlip($nama, $link, $no, $tanggal): string
+    {
+        return <<<EOT
+        Halo {$nama},
+
+        Terima kasih telah menggunakan layanan LaundryMu! Untuk menyelesaikan transaksi, silakan klik link di bawah ini untuk melakukan pembayaran:
+
+        🔗 {$link}
+
+        Nomor pesanan Anda: {$no}
+
+        Pastikan Anda menyelesaikan pembayaran sebelum {$tanggal} agar pesanan Anda dapat segera kami proses.
+
+        Jika ada pertanyaan, jangan ragu untuk menghubungi kami.
+
+        Salam,
+        Tim LaundryMu
+        📞: +62 xxx-xxx-xxxx
+        🌐: www.laundrymu.com
+        EOT;
+    }
+
+    private function pembayaranOutletBerhasil($nama, $tanggal, $nominal): string
+    {
+        return <<< EOT
+        Halo {$nama}! 🙌
+
+        Kami dengan senang hati mengonfirmasi bahwa pembayaran lisensi aplikasi LaundryMu kamu telah BERHASIL! 🎉
+
+        🗓 Tanggal Pembayaran: {$tanggal} WIB
+        💳 Jumlah Dibayar: {$nominal}
+
+        Lisensi aplikasi kamu sudah aktif dan siap digunakan untuk memaksimalkan manajemen laundry! Terima kasih telah mempercayakan LaundryMu sebagai partner bisnis anda.
+
+        Jika ada pertanyaan atau bantuan yang diperlukan, tim kami siap membantu! 😊
+
+        Selamat menjalankan bisnis!
+        LaundryMu Team
+        📧 laundrymukasir@gmail.com
+        🌐 www.laundrymu.com
         EOT;
     }
 }

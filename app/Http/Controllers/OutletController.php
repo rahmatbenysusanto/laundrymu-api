@@ -6,11 +6,16 @@ use App\Http\Requests\Outlet\CreateRequest;
 use App\Http\Requests\Outlet\FindRequest;
 use App\Http\Requests\Outlet\PerpanjangLisensiRequest;
 use App\Http\Requests\Outlet\UpdateRequest;
+use App\Http\Service\OutletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class OutletController extends Controller
 {
+    public function __construct(
+        protected OutletService $outletService
+    ) {}
+
     public function create(CreateRequest $request): \Illuminate\Http\JsonResponse
     {
         try {
@@ -35,7 +40,7 @@ class OutletController extends Controller
     {
         try {
             DB::beginTransaction();
-
+            $this->outletService->perpanjangLisensi($request);
             DB::commit();
             return response()->json([
                 'success'   => true,

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FlipController;
 use App\Http\Controllers\LayananController;
+use App\Http\Controllers\OutletController;
 use App\Http\Controllers\ParfumController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PembayaranController;
@@ -65,6 +66,12 @@ Route::middleware(JwtMiddleware::class)->group(function () {
         Route::patch('/', 'update');
         Route::delete('/', 'delete');
     });
+
+    Route::prefix('outlet')->controller(OutletController::class)->group(function () {
+        Route::post('/pembayaran', 'perpanjangLisensi');
+    });
 });
+
+Route::get('/callback/accept-payment', [FlipController::class, 'callbackAcceptPayment']);
 
 

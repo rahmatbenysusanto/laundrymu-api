@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class FlipRepository
 {
@@ -44,7 +45,7 @@ class FlipRepository
     public function createBill($title, $amount)
     {
         $client = new Client();
-        $response = $client->request('POST', env('FLIP_API_URL').'v2/pwf/payment', [
+        $response = $client->request('POST', env('FLIP_API_URL').'v2/pwf/bill', [
             'headers' => [
                 'Authorization' => 'Basic ' . $this->generateToken(),
                 'Content-Type'  => 'application/x-www-form-urlencoded',
@@ -53,7 +54,7 @@ class FlipRepository
                 "title"                     => $title,
                 "amount"                    => $amount,
                 "type"                      => "SINGLE",
-                "expired_date"              => date('Y-m-d H:i', now()),
+                "expired_date"              => date('Y-m-d H:i', strtotime("+1 day")),
                 "redirect_url"              => "",
                 "is_address_required"       => 0,
                 "is_phone_number_required"  => 0
@@ -61,7 +62,9 @@ class FlipRepository
         ]);
 
         $body = $response->getBody();
-        $content = $body->getContents();
-        return json_decode($content, true);
+        $body->getContents();
+        $data = json_decode($body, true);
+
+        return $data['link_url'] ?? 'Link URL tidak ditemukan';
     }
 }

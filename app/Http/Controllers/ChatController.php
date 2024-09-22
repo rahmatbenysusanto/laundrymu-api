@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Chat\CreateRequest;
 use App\Http\Requests\Chat\FindRequest;
 use App\Http\Service\ChatService;
+use App\Http\Service\LogService;
 use Illuminate\Support\Facades\DB;
 
 class ChatController extends Controller
 {
     public function __construct(
-        protected ChatService $chatService
+        protected ChatService $chatService,
+        protected LogService $logService
     ) {}
 
     public function create(CreateRequest $request): \Illuminate\Http\JsonResponse
@@ -25,6 +27,7 @@ class ChatController extends Controller
             ], 201);
         } catch (\Exception $err) {
             DB::rollBack();
+            $this->logService->log('', '', $err->getMessage());
             return response()->json([
                 'status'    => false,
                 'message'   => 'Send Chat Failed',
