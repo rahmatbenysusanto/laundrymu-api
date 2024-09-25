@@ -127,6 +127,15 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        'transaksi' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/transaksi.log'),
+        ],
+
+        'outlet' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/outlet.log'),
+        ],
     ],
 
 ];

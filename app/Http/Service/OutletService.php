@@ -7,6 +7,7 @@ use App\Http\Repository\LisensiRepository;
 use App\Http\Repository\NotificationRepository;
 use App\Http\Repository\OutletPembayaranRepository;
 use App\Http\Repository\OutletRepository;
+use App\Http\Repository\UserHasOutletRepository;
 use App\Jobs\NotificationJob;
 use Illuminate\Support\Facades\Log;
 
@@ -17,6 +18,7 @@ class OutletService
         protected LisensiRepository $lisensiRepository,
         protected OutletPembayaranRepository $outletPembayaranRepository,
         protected OutletRepository $outletRepository,
+        protected UserHasOutletRepository $userHasOutletRepository,
     ) {}
 
     public function perpanjangLisensi($request): void
@@ -46,5 +48,10 @@ class OutletService
             'no_hp'     => $outlet->no_hp,
             'tanggal'   => date('d-M-Y H:i', strtotime('+1 day')),
         ]);
+    }
+
+    public function findByUserId($user_id): \Illuminate\Database\Eloquent\Collection
+    {
+        return $this->userHasOutletRepository->getByUserId($user_id);
     }
 }

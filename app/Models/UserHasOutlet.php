@@ -26,4 +26,9 @@ class UserHasOutlet extends Model
         'created_at' => 'integer',
         'updated_at' => 'integer',
     ];
+
+    public function outlet(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Outlet::class);
+    }
 }

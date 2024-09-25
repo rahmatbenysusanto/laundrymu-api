@@ -33,6 +33,7 @@ class JwtMiddleware
         try {
             $credentials = JWT::decode($token, new Key(env('JWT_SECRET'), 'HS256'));
             $request->attributes->set('auth', $credentials);
+            $request->attributes->set('user_id', $credentials->user_id);
         } catch(ExpiredException $e) {
             return response()->json([
                 'error' => 'Provided token is expired.'

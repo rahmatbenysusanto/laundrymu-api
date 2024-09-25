@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FlipController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\OutletController;
@@ -22,6 +23,12 @@ Route::middleware(JwtMiddleware::class)->group(function () {
         return response()->json([
             'status'    => true
         ]);
+    });
+
+    Route::prefix('dashboard')->controller(DashboardController::class)->group(function () {
+        Route::get('/status-transaksi', 'getStatusTransaksi');
+        Route::get('/statistic-transaksi', 'statisticTransaksi');
+        Route::get('/chart', 'chart');
     });
 
     Route::prefix('parfum')->controller(ParfumController::class)->group(function () {
@@ -53,6 +60,7 @@ Route::middleware(JwtMiddleware::class)->group(function () {
         Route::post('/', 'create');
         Route::patch('/cancel', 'cancel');
         Route::patch('/', 'update');
+        Route::get('/', 'listTransaksi');
     });
 
     Route::prefix('chat')->controller(ChatController::class)->group(function () {
@@ -69,6 +77,7 @@ Route::middleware(JwtMiddleware::class)->group(function () {
 
     Route::prefix('outlet')->controller(OutletController::class)->group(function () {
         Route::post('/pembayaran', 'perpanjangLisensi');
+        Route::get('/user', 'findByUserId');
     });
 });
 

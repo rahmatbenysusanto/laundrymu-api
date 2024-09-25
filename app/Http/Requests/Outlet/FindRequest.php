@@ -2,27 +2,36 @@
 
 namespace App\Http\Requests\Outlet;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class FindRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'user_id'   => 'nullable|numeric|required_without:outlet_id',
+            'outlet_id' => 'nullable|numeric|required_without:user_id'
         ];
+    }
+
+    private function response($err): \Illuminate\Http\JsonResponse
+    {
+        return response()->json([
+            'status'    => false,
+            'message'   => 'Validation Request Failed',
+            'errors'    => $err
+        ], 422);
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException($this->response($validator->errors()));
     }
 }

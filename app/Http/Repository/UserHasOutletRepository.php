@@ -10,4 +10,16 @@ class UserHasOutletRepository
     {
         UserHasOutlet::create($data);
     }
+
+    public function getByUserId($userId): \Illuminate\Database\Eloquent\Collection
+    {
+        return UserHasOutlet::with(['outlet' => function ($outlet) {
+            return $outlet->select([
+                'id',
+                'nama',
+                'expired',
+                'status'
+            ]);
+        }])->where('user_id', $userId)->get();
+    }
 }

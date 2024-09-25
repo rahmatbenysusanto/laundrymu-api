@@ -21,13 +21,13 @@ class AuthController extends Controller
             $this->authService->create($request);
             DB::commit();
             return response()->json([
-                'success'   => true,
+                'status'    => true,
                 'message'   => 'Create User Successfully'
             ], 201);
         } catch (\Exception $err) {
             DB::rollBack();
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Create User Failed',
                 'errors'    => $err->getMessage()
             ], 400);
@@ -39,13 +39,13 @@ class AuthController extends Controller
         try {
             $user = $this->authService->login($request);
             return response()->json([
-                'success'   => true,
+                'status'    => true,
                 'message'   => 'Login Successfully',
                 'data'      => $user
             ], 200);
         } catch (\Exception $err) {
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Login Failed',
                 'errors'    => $err->getMessage()
             ], 400);

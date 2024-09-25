@@ -125,4 +125,12 @@ class TransaksiService
                 break;
         }
     }
+
+    public function listTransaksi($request)
+    {
+        $status = $request->get('status');
+        $outlet_id = $request->query('outlet_id');
+
+        return $this->transaksiRepository->listTransaksi($outlet_id, $status);
+    }
 }

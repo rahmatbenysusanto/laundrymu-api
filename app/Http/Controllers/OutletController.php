@@ -76,15 +76,16 @@ class OutletController extends Controller
         }
     }
 
-    public function findByUserId(FindRequest $request): \Illuminate\Http\JsonResponse
+    public function findByUserId(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
             DB::beginTransaction();
-
+            $result = $this->outletService->findByUserId($request->attributes->get('user_id'));
             DB::commit();
             return response()->json([
                 'success'   => true,
-                'message'   => 'Find Outlet Successfully'
+                'message'   => 'Find Outlet Successfully',
+                'data'      => $result
             ], 200);
         } catch (\Exception $err) {
             DB::rollBack();

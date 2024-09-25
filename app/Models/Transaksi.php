@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use function Symfony\Component\Translation\t;
 
 class Transaksi extends Model
 {
@@ -33,5 +34,13 @@ class Transaksi extends Model
         return $this->hasOne(Pelanggan::class, 'id', 'pelanggan_id');
     }
 
+    public function pembayaran(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Pembayaran::class, 'id', 'pembayaran_id');
+    }
 
+    public function transaksiDetail(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(TransaksiDetail::class, 'transaksi_id', 'id');
+    }
 }

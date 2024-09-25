@@ -74,4 +74,22 @@ class TransaksiController extends Controller
             ], 400);
         }
     }
+
+    public function listTransaksi(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $transaksi = $this->transaksiService->listTransaksi($request);
+            return response()->json([
+                'status'    => true,
+                'message'   => 'List transaksi success',
+                'data'      => $transaksi
+            ], 200);
+        } catch (\Exception $err) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'List Transaksi Failed',
+                'errors'    => $err->getMessage()
+            ], 400);
+        }
+    }
 }

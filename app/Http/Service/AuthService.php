@@ -119,6 +119,8 @@ class AuthService
                 'token_type'    => 'Bearer',
                 'nama'          => $user->nama,
                 'role'          => $user->role,
+                'status'        => $user->status,
+                'user_id'       => $user->id
             ];
         }
 
