@@ -16,6 +16,7 @@ return new class extends Migration
             $table->bigInteger('outlet_id');
             $table->string('nama');
             $table->string('no_hp');
+            $table->boolean('delete')->default(0);
             $table->bigInteger('created_at');
             $table->bigInteger('updated_at');
         });

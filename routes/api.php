@@ -54,6 +54,7 @@ Route::middleware(JwtMiddleware::class)->group(function () {
         Route::post('/', 'create');
         Route::get('/', 'find');
         Route::patch('/', 'update');
+        Route::delete('/', 'delete');
     });
 
     Route::prefix('transaksi')->controller(TransaksiController::class)->group(function () {
@@ -65,7 +66,7 @@ Route::middleware(JwtMiddleware::class)->group(function () {
 
     Route::prefix('chat')->controller(ChatController::class)->group(function () {
         Route::post('/', 'create');
-        Route::get('/', 'getByOutboundId');
+        Route::get('/', 'getByOutletId');
     });
 
     Route::prefix('layanan')->controller(LayananController::class)->group(function () {

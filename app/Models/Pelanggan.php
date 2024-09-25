@@ -9,7 +9,7 @@ class Pelanggan extends Model
 {
     use HasFactory;
     protected $table = 'pelanggan';
-    protected $fillable = ['outlet_id', 'nama', 'no_hp', 'created_at', 'updated_at'];
+    protected $fillable = ['outlet_id', 'nama', 'no_hp', 'delete', 'created_at', 'updated_at'];
     public $timestamps = false;
 
     public function setCreatedAt($value): void

@@ -16,7 +16,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id'        => 'required|exists:layanan,id',
+            'id'        => 'required|exists:pelanggan,id',
             'nama'      => 'required|string',
             'no_hp'     => 'required|string',
         ];

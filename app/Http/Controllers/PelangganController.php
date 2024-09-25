@@ -43,7 +43,7 @@ class PelangganController extends Controller
             if ($request->query('id') !== null) {
                 $result = $this->pelangganService->findById($request->query('id'));
             } elseif ($request->query('outlet_id') !== null) {
-                $result = $this->pelangganService->findByOutletId($request->query('outlet_id'));
+                $result = $this->pelangganService->getByOutletId($request->query('outlet_id'));
             } else {
                 abort(404, 'Request Failed, Params not found.');
             }
@@ -79,6 +79,26 @@ class PelangganController extends Controller
             return response()->json([
                 'status'    => false,
                 'message'   => 'Update Pelanggan Failed',
+                'errors'    => $err->getMessage()
+            ], 400);
+        }
+    }
+
+    public function delete(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+            $this->pelangganService->delete($request->query('id'));
+            DB::commit();
+            return response()->json([
+                'status'    => true,
+                'message'   => 'Delete Pelanggan Successfully',
+            ], 200);
+        } catch (\Exception $err) {
+            DB::rollBack();
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Delete Pelanggan Failed',
                 'errors'    => $err->getMessage()
             ], 400);
         }

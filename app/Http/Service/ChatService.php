@@ -17,6 +17,8 @@ class ChatService
             'outlet_id' => $request->outlet_id,
             'chat'      => $request->chat,
             'role'      => $request->role,
+            'created_at'=> now()->timestamp * 1000,
+            'updated_at'=> now()->timestamp * 1000,
         ]);
     }
 
