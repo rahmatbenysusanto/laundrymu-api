@@ -7,20 +7,21 @@ use App\Http\Requests\Pembayaran\CreateRequest;
 use App\Http\Requests\Pembayaran\DeleteRequest;
 use App\Http\Requests\Pembayaran\FindRequest;
 use App\Http\Requests\Pembayaran\UpdateRequest;
+use App\Http\Service\PembayaranService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PembayaranController extends Controller
 {
     public function __construct(
-        protected PembayaranRepository $pembayaranRepository
+        protected PembayaranService  $pembayaranService
     ) {}
 
     public function create(CreateRequest $request): \Illuminate\Http\JsonResponse
     {
         try {
             DB::beginTransaction();
-            $this->pembayaranRepository->create($request);
+            $this->pembayaranService->create($request);
             DB::commit();
             return response()->json([
                 'status'    => true,
@@ -40,9 +41,9 @@ class PembayaranController extends Controller
     {
         try {
             if ($request->query('id') !== null) {
-                $pembayaran = $this->pembayaranRepository->findById($request->query('id'));
+                $pembayaran = $this->pembayaranService->findById($request->query('id'));
             } elseif ($request->query('outlet_id') !== null) {
-                $pembayaran = $this->pembayaranRepository->findByOutletId($request->query('outlet_id'));
+                $pembayaran = $this->pembayaranService->findByOutletId($request->query('outlet_id'));
             } else {
                 abort(404, 'Request Failed, Params not found.');
             }
@@ -64,7 +65,7 @@ class PembayaranController extends Controller
     {
         try {
             DB::beginTransaction();
-            $this->pembayaranRepository->update($request->query('id'), $request);
+            $this->pembayaranService->update($request->query('id'), $request);
             DB::commit();
             return response()->json([
                 'status'    => true,
@@ -84,7 +85,7 @@ class PembayaranController extends Controller
     {
         try {
             DB::beginTransaction();
-            $this->pembayaranRepository->delete($request->query('id'));
+            $this->pembayaranService->delete($request->query('id'));
             DB::commit();
             return response()->json([
                 'status'    => true,

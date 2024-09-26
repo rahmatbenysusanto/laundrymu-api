@@ -17,6 +17,8 @@ class ParfumService
             'nama'      => $request->nama,
             'harga'     => $request->harga,
             'outlet_id' => $request->outlet_id,
+            'created_at'=> now()->timestamp * 1000,
+            'updated_at'=> now()->timestamp * 1000,
         ]);
     }
 
@@ -41,6 +43,8 @@ class ParfumService
 
     public function delete($id): void
     {
-        $this->parfumRepository->delete($id);
+        $this->parfumRepository->update($id, [
+            'delete'    => 1
+        ]);
     }
 }

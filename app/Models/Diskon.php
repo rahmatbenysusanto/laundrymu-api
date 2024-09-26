@@ -9,7 +9,7 @@ class Diskon extends Model
 {
     use HasFactory;
     protected $table = 'diskon';
-    protected $fillable = [];
+    protected $fillable = ['outlet_id', 'nama', 'type', 'nominal', 'delete', 'created_at', 'updated_at'];
     public $timestamps = false;
 
     public function setCreatedAt($value): void

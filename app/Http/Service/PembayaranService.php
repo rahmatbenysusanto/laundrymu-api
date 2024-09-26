@@ -15,6 +15,8 @@ class PembayaranService
         $this->pembayaranRepository->create([
             'outlet_id' => $request->outlet_id,
             'nama'      => $request->nama,
+            'created_at'=> now()->timestamp * 1000,
+            'updated_at'=> now()->timestamp * 1000,
         ]);
     }
 

@@ -18,15 +18,11 @@ class ParfumRepository
 
     public function findByOutletId($outlet_id)
     {
-        return Parfum::where('outlet_id', $outlet_id)->get();
+        return Parfum::where('outlet_id', $outlet_id)
+            ->where('delete', 0)
+            ->get();
     }
 
-    public function delete($id): void
-    {
-        Parfum::where('id', $id)->update([
-            'delete'    => 1
-        ]);
-    }
 
     public function update($id, $data): void
     {

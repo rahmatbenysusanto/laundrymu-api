@@ -18,7 +18,9 @@ class LayananRepository
 
     public function getByOutletId($outlet_id)
     {
-        return Layanan::where('outlet_id', $outlet_id)->get();
+        return Layanan::where('outlet_id', $outlet_id)
+            ->where('delete', 0)
+            ->get();
     }
 
     public function update($id, $data): void

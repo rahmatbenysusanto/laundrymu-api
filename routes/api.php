@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DiskonController;
 use App\Http\Controllers\FlipController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\OutletController;
@@ -51,6 +52,13 @@ Route::middleware(JwtMiddleware::class)->group(function () {
     });
 
     Route::prefix('pelanggan')->controller(PelangganController::class)->group(function () {
+        Route::post('/', 'create');
+        Route::get('/', 'find');
+        Route::patch('/', 'update');
+        Route::delete('/', 'delete');
+    });
+
+    Route::prefix('diskon')->controller(DiskonController::class)->group(function () {
         Route::post('/', 'create');
         Route::get('/', 'find');
         Route::patch('/', 'update');

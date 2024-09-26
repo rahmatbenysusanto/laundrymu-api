@@ -8,12 +8,14 @@ class PembayaranRepository
 {
     public function findById($id)
     {
-        return Pembayaran::find($id);
+        return Pembayaran::where('id', $id)->first();
     }
 
     public function findByOutletId($outlet_id)
     {
-        return Pembayaran::where('outlet_id', $outlet_id)->get();
+        return Pembayaran::where('outlet_id', $outlet_id)
+            ->where('delete', 0)
+            ->get();
     }
 
     public function create($data)
