@@ -26,4 +26,14 @@ class OutletPembayaran extends Model
         'created_at' => 'integer',
         'updated_at' => 'integer',
     ];
+
+    public function outlet(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Outlet::class, 'outlet_id', 'id');
+    }
+
+    public function lisensi(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Lisensi::class, 'lisensi_id', 'id');
+    }
 }

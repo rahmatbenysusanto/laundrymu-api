@@ -16,11 +16,11 @@ class OutletController extends Controller
         protected OutletService $outletService
     ) {}
 
-    public function create(CreateRequest $request): \Illuminate\Http\JsonResponse
+    public function create(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
             DB::beginTransaction();
-
+            $this->outletService->create($request);
             DB::commit();
             return response()->json([
                 'success'   => true,
@@ -56,15 +56,16 @@ class OutletController extends Controller
         }
     }
 
-    public function findById(FindRequest $request): \Illuminate\Http\JsonResponse
+    public function findById(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
             DB::beginTransaction();
-
+            $outlet = $this->outletService->findById($request->query('id'));
             DB::commit();
             return response()->json([
                 'success'   => true,
-                'message'   => 'Find Outlet Successfully'
+                'message'   => 'Find Outlet Successfully',
+                'data'      => $outlet
             ], 200);
         } catch (\Exception $err) {
             DB::rollBack();
@@ -112,6 +113,44 @@ class OutletController extends Controller
             return response()->json([
                 'success'   => false,
                 'message'   => 'Update Outlet Failed',
+                'errors'    => $err->getMessage()
+            ], 400);
+        }
+    }
+
+    public function historyPembayaran(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $history = $this->outletService->historyPembayaran($request->query('outlet_id'));
+
+            return response()->json([
+                'success'   => true,
+                'message'   => 'History Pembayaran Outlet Successfully',
+                'data'      => $history
+            ]);
+        } catch (\Exception $err) {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Get History Pembayaran Failed',
+                'errors'    => $err->getMessage()
+            ], 400);
+        }
+    }
+
+    public function findByNomorPembayaran(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $history = $this->outletService->findByNomorPembayaran($request->query('nomor_pembayaran'));
+
+            return response()->json([
+                'success'   => true,
+                'message'   => 'History Pembayaran Outlet Successfully',
+                'data'      => $history
+            ]);
+        } catch (\Exception $err) {
+            return response()->json([
+                'success'   => false,
+                'message'   => 'Get History Pembayaran Failed',
                 'errors'    => $err->getMessage()
             ], 400);
         }

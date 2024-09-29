@@ -10,4 +10,9 @@ class LisensiRepository
     {
         return Lisensi::find($id);
     }
+
+    public function get(): \Illuminate\Database\Eloquent\Collection
+    {
+        return Lisensi::all();
+    }
 }

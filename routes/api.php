@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\AlamatController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiskonController;
 use App\Http\Controllers\FlipController;
 use App\Http\Controllers\LayananController;
+use App\Http\Controllers\LisensiController;
 use App\Http\Controllers\OutletController;
 use App\Http\Controllers\ParfumController;
 use App\Http\Controllers\PelangganController;
@@ -87,6 +89,22 @@ Route::middleware(JwtMiddleware::class)->group(function () {
     Route::prefix('outlet')->controller(OutletController::class)->group(function () {
         Route::post('/pembayaran', 'perpanjangLisensi');
         Route::get('/user', 'findByUserId');
+        Route::post('/', 'create');
+        Route::get('/', 'findById');
+        Route::get('/history-pembayaran', 'historyPembayaran');
+        Route::get('/detail-pembayaran', 'findByNomorPembayaran');
+    });
+
+    Route::prefix('alamat')->controller(AlamatController::class)->group(function () {
+        Route::get('/provinsi', 'getProvinsi');
+        Route::get('/kota', 'getKota');
+        Route::get('/kecamatan', 'getKecamatan');
+        Route::get('/kelurahan', 'getKelurahan');
+        Route::get('/kodepos', 'getKodepos');
+    });
+
+    Route::prefix('lisensi')->controller(LisensiController::class)->group(function () {
+        Route::get('/', 'getLisensi');
     });
 });
 

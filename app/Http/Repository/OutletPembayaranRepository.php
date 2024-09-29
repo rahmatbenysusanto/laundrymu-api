@@ -20,4 +20,14 @@ class OutletPembayaranRepository
     {
         return OutletPembayaran::where('url_payment', $link_url)->first();
     }
+
+    public function getByOutletId($outlet_id): \Illuminate\Database\Eloquent\Collection
+    {
+        return OutletPembayaran::with('outlet', 'lisensi')->where('outlet_id', $outlet_id)->get();
+    }
+
+    public function findByNomorPembayaran($nomor_pembayaran)
+    {
+        return OutletPembayaran::with('outlet', 'lisensi')->where('nomor_pembayaran', $nomor_pembayaran)->first();
+    }
 }

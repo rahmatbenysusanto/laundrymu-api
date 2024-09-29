@@ -17,8 +17,10 @@ class UserHasOutletRepository
             return $outlet->select([
                 'id',
                 'nama',
+                'no_hp',
                 'expired',
-                'status'
+                'status',
+                'alamat'
             ]);
         }])->where('user_id', $userId)->get();
     }
