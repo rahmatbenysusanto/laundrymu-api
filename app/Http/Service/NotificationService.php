@@ -27,9 +27,11 @@ class NotificationService
                 $this->whatsappText($data['no_hp'], $this->waNewUser($data['otp']));
                 break;
             case 'transaksi baru':
-                $this->whatsappText('62895627637701', $this->waNewOrder($data['transaksi_id']));
+                $this->whatsappText($data['no_hp'], $this->waNewOrder($data['transaksi_id']));
                 break;
             case 'transaksi selesai':
+                $this->whatsappText($data['no_hp'], $this->transaksiDiAmbil($data['nama'], $data['order_number']));
+                break;
             case 'transaksi dipickup':
             case 'transaksi delivery':
             case 'pembayaran flip':
@@ -188,6 +190,26 @@ Terima kasih!
         LaundryMu Team
         📧 laundrymukasir@gmail.com
         🌐 www.laundrymu.com
+        EOT;
+    }
+
+    private function transaksiDiAmbil($nama, $orderNumber): string
+    {
+        return <<<EOT
+        Halo, {$nama}!
+        Kami senang memberi tahu bahwa laundry Anda sudah selesai dan siap diambil di outlet kami. 😊
+
+        💼 Rincian Laundry:
+
+        Nomor Order: {$orderNumber}
+        Status: Selesai
+
+        Anda dapat mengambil laundry Anda kapan saja selama jam operasional outlet kami.
+        Jangan lupa membawa nota atau menyebutkan nomor order saat pengambilan, ya! 😉
+
+        Jika Anda memerlukan bantuan lebih lanjut, jangan ragu untuk menghubungi kami.
+
+        Selamat menikmati layanan kami, dan terima kasih telah mempercayakan kebersihan pakaian Anda kepada kami! 👕✨
         EOT;
     }
 }

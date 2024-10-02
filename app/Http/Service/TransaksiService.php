@@ -2,6 +2,8 @@
 
 namespace App\Http\Service;
 
+use App\Http\Repository\ParfumRepository;
+use App\Http\Repository\PelangganRepository;
 use App\Http\Repository\TransaksiDetailRepository;
 use App\Http\Repository\TransaksiHasOutletRepository;
 use App\Http\Repository\TransaksiHistoryRepository;
@@ -15,7 +17,9 @@ class TransaksiService
         protected TransaksiRepository $transaksiRepository,
         protected TransaksiDetailRepository $transaksiDetailRepository,
         protected TransaksiHistoryRepository $transaksiHistoryRepository,
-        protected TransaksiHasOutletRepository  $transaksiHasOutletRepository
+        protected TransaksiHasOutletRepository  $transaksiHasOutletRepository,
+        protected PelangganRepository $pelangganRepository,
+        protected ParfumRepository $parfumRepository,
     ) {}
 
     public function create($request): void
@@ -26,13 +30,13 @@ class TransaksiService
             'diskon_id'         => $request->diskon_id,
             'pengiriman_id'     => $request->pengiriman_id,
             'pembayaran_id'     => $request->pembayaran_id,
-            'order_number'      => 'ORD-'.now()->format('Ymd').mt_rand(1000, 9999),
+            'order_number'      => 'INV-'.now()->format('Ymd').mt_rand(1000, 9999),
             'status'            => $request->status,
             'status_pembayaran'  => $request->status_pembayaran,
             'harga'             => $request->harga,
             'harga_diskon'      => $request->harga_diskon,
             'biaya_pengiriman'  => $request->biaya_pengiriman,
-            'total_harga'       => $request->total_harga,
+            'total_harga'       => ($request->harga + $request->biaya_pengiriman + $request->harga_parfum) - $request->harga_diskon,
             'catatan'           => $request->catatan,
             'created_at'        => now()->timestamp * 1000,
             'updated_at'        => now()->timestamp * 1000,
@@ -73,8 +77,11 @@ class TransaksiService
             ]);
         }
 
+        $pelanggan = $this->pelangganRepository->findById($request->pelanggan_id);
+
         NotificationJob::dispatch('transaksi baru', [
-            'transaksi_id' => $transaksi->id,
+            'transaksi_id'  => $transaksi->id,
+            'no_hp'         => $pelanggan->no_hp,
         ]);
     }
 
@@ -105,8 +112,12 @@ class TransaksiService
                 break;
             case 'diproses':
                 $this->transaksiRepository->updateStatus($request->id, 'selesai');
+                $transaksi = $this->transaksiRepository->findById($request->id);
+                $pelanggan = $this->pelangganRepository->findById($transaksi->pelanggan_id);
                 NotificationJob::dispatch('transaksi selesai', [
-                    'transaksi_id' => $request->id,
+                    'no_hp'         => $pelanggan->no_hp,
+                    'nama'          => $pelanggan->nama,
+                    'order_number'  => $transaksi->order_number,
                 ]);
                 break;
             case 'diambil':

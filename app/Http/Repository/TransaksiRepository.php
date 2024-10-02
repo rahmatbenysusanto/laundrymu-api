@@ -27,6 +27,7 @@ class TransaksiRepository
         return Transaksi::where('outlet_id', $outlet_id)
             ->where('created_at', '>=', $start_date)
             ->where('created_at', '<=', $end_date)
+            ->where('status', '!=', 'batal')
             ->count();
     }
 
@@ -35,6 +36,7 @@ class TransaksiRepository
         return Transaksi::where('outlet_id', $outlet_id)
             ->where('created_at', '>=', $start_date)
             ->where('created_at', '<=', $end_date)
+            ->where('status', '!=', 'batal')
             ->sum('total_harga');
     }
 

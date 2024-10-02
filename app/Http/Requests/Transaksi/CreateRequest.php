@@ -28,6 +28,7 @@ class CreateRequest extends FormRequest
             'biaya_pengiriman'  => 'nullable|numeric|min:0',
             'total_harga'       => 'required|numeric|min:0',
             'catatan'           => 'nullable|string|max:255',
+            'harga_parfum'      => 'nullable|numeric|min:0',
             'detail'            => 'required|array',
             'detail.*.layanan_id'   => 'required|integer|exists:layanan,id',
             'detail.*.parfum_id'    => 'required|integer|exists:parfum,id',

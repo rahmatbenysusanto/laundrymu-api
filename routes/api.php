@@ -11,6 +11,7 @@ use App\Http\Controllers\OutletController;
 use App\Http\Controllers\ParfumController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PembayaranController;
+use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Middleware\JwtMiddleware;
 use App\Http\Controllers\AuthController;
@@ -70,7 +71,7 @@ Route::middleware(JwtMiddleware::class)->group(function () {
     Route::prefix('transaksi')->controller(TransaksiController::class)->group(function () {
         Route::post('/', 'create');
         Route::patch('/cancel', 'cancel');
-        Route::patch('/', 'update');
+        Route::patch('/', 'updateStatus');
         Route::get('/', 'listTransaksi');
     });
 
@@ -105,6 +106,10 @@ Route::middleware(JwtMiddleware::class)->group(function () {
 
     Route::prefix('lisensi')->controller(LisensiController::class)->group(function () {
         Route::get('/', 'getLisensi');
+    });
+
+    Route::prefix('pengiriman')->controller(PengirimanController::class)->group(function () {
+        Route::get('/', 'find');
     });
 });
 
