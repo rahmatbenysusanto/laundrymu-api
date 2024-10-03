@@ -41,7 +41,7 @@ class PengirimanController extends Controller
     {
         try {
             DB::beginTransaction();
-
+            $this->pengirimanService->create($request);
             DB::commit();
             return response()->json([
                 'status'    => true,
@@ -61,7 +61,7 @@ class PengirimanController extends Controller
     {
         try {
             DB::beginTransaction();
-
+            $this->pengirimanService->update($request->query('id'), $request);
             DB::commit();
             return response()->json([
                 'status'    => true,
@@ -80,8 +80,7 @@ class PengirimanController extends Controller
     public function delete(Request $request): \Illuminate\Http\JsonResponse
     {
         try {
-            $this->pengirimanService->findById($request->query('id'));
-
+            $this->pengirimanService->delete($request->query('id'));
             return response()->json([
                 'status'    => true,
                 'message'   => 'Delete Pengiriman Successfully',
