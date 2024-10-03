@@ -73,6 +73,8 @@ Route::middleware(JwtMiddleware::class)->group(function () {
         Route::patch('/cancel', 'cancel');
         Route::patch('/', 'updateStatus');
         Route::get('/', 'listTransaksi');
+        Route::get('/detail', 'detailTransaksi');
+        Route::get('/history', 'historyTransaksi');
     });
 
     Route::prefix('chat')->controller(ChatController::class)->group(function () {
@@ -110,6 +112,9 @@ Route::middleware(JwtMiddleware::class)->group(function () {
 
     Route::prefix('pengiriman')->controller(PengirimanController::class)->group(function () {
         Route::get('/', 'find');
+        Route::post('/', 'create');
+        Route::delete('/', 'delete');
+        Route::patch('/', 'update');
     });
 });
 

@@ -31,4 +31,9 @@ class TransaksiDetail extends Model
     {
         return $this->belongsTo(Layanan::class);
     }
+
+    public function parfum(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Parfum::class);
+    }
 }

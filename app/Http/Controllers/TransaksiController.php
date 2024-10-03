@@ -8,6 +8,7 @@ use App\Http\Requests\Transaksi\UpdateStatusRequest;
 use App\Http\Service\TransaksiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TransaksiController extends Controller
 {
@@ -67,6 +68,7 @@ class TransaksiController extends Controller
             ], 200);
         } catch (\Exception $err) {
             DB::rollBack();
+            Log::error($err->getMessage());
             return response()->json([
                 'status'    => false,
                 'message'   => 'Update status failed',
@@ -88,6 +90,42 @@ class TransaksiController extends Controller
             return response()->json([
                 'status'    => false,
                 'message'   => 'List Transaksi Failed',
+                'errors'    => $err->getMessage()
+            ], 400);
+        }
+    }
+
+    public function detailTransaksi(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $transaksi = $this->transaksiService->detailTransaksi($request->query('order-number'));
+            return response()->json([
+                'status'    => true,
+                'message'   => 'Get transaksi success',
+                'data'      => $transaksi
+            ], 200);
+        } catch (\Exception $err) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Get Transaksi Failed',
+                'errors'    => $err->getMessage()
+            ], 400);
+        }
+    }
+
+    public function historyTransaksi(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $transaksi = $this->transaksiService->historyTransaksi($request->query('order-number'));
+            return response()->json([
+                'status'    => true,
+                'message'   => 'Get transaksi success',
+                'data'      => $transaksi
+            ], 200);
+        } catch (\Exception $err) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Get Transaksi Failed',
                 'errors'    => $err->getMessage()
             ], 400);
         }

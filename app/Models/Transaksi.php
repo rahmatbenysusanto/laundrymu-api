@@ -43,4 +43,14 @@ class Transaksi extends Model
     {
         return $this->hasMany(TransaksiDetail::class, 'transaksi_id', 'id');
     }
+
+    public function transaksiHistory(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(TransaksiHistory::class)->orderBy('created_at', 'DESC');
+    }
+
+    public function pengiriman(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Pengiriman::class);
+    }
 }

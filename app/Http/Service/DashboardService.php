@@ -43,12 +43,17 @@ class DashboardService
         ];
 
         $data = [];
+        $nominal = [];
         foreach ($dates as $date) {
             $startDate = Carbon::createFromFormat('Y-m-d H:i', $date.' 00:00');
             $endDate = Carbon::createFromFormat('Y-m-d H:i', $date. ' 23:59');
             $data[] = $this->transaksiRepository->jumlahTransaksi($outlet_id, $startDate->timestamp * 1000, $endDate->timestamp * 1000);
+            $nominal[] = $this->transaksiRepository->nominalTransaksi($outlet_id, $startDate->timestamp * 1000, $endDate->timestamp * 1000);
         }
 
-        return $data;
+        return [
+            $data,
+            $nominal
+        ];
     }
 }

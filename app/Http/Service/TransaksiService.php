@@ -109,6 +109,13 @@ class TransaksiService
         switch ($request->status) {
             case 'baru':
                 $this->transaksiRepository->updateStatus($request->id, 'diproses');
+                $this->transaksiHistoryRepository->create([
+                    'transaksi_id'  => $request->id,
+                    'status'        => 'diproses',
+                    'keterangan'    => 'Laundry Anda sudah diproses oleh petugas.',
+                    'created_at'    => now()->timestamp * 1000,
+                    'updated_at'    => now()->timestamp * 1000,
+                ]);
                 break;
             case 'diproses':
                 $this->transaksiRepository->updateStatus($request->id, 'selesai');
@@ -119,11 +126,28 @@ class TransaksiService
                     'nama'          => $pelanggan->nama,
                     'order_number'  => $transaksi->order_number,
                 ]);
+
+                $this->transaksiHistoryRepository->create([
+                    'transaksi_id'  => $request->id,
+                    'status'        => 'selesai',
+                    'keterangan'    => 'Laundry Anda sudah selesai diproses oleh petugas. Laundry anda akan siap untuk diambil',
+                    'created_at'    => now()->timestamp * 1000,
+                    'updated_at'    => now()->timestamp * 1000,
+                ]);
                 break;
             case 'diambil':
+                $this->transaksiRepository->updateStatus($request->id, 'close');
+                $this->transaksiHistoryRepository->create([
+                    'transaksi_id'  => $request->id,
+                    'status'        => 'close',
+                    'keterangan'    => 'Laundry sudah diambil oleh pelanggan & sudah melunasi pembayaran',
+                    'created_at'    => now()->timestamp * 1000,
+                    'updated_at'    => now()->timestamp * 1000,
+                ]);
+                break;
             case 'diantar':
             case 'selesai':
-                $this->transaksiRepository->updateStatus($request->id, 'close');
+                $this->transaksiRepository->updateStatus($request->id, 'diambil');
                 break;
             case 'pending':
                 $this->transaksiRepository->updateStatus($request->id, 'pengambilan');
@@ -137,11 +161,21 @@ class TransaksiService
         }
     }
 
-    public function listTransaksi($request)
+    public function listTransaksi($request): \Illuminate\Database\Eloquent\Collection
     {
         $status = $request->get('status');
         $outlet_id = $request->query('outlet_id');
 
         return $this->transaksiRepository->listTransaksi($outlet_id, $status);
+    }
+
+    public function detailTransaksi($order_number)
+    {
+        return $this->transaksiRepository->findTransaksi($order_number);
+    }
+
+    public function historyTransaksi($order_number)
+    {
+        return $this->transaksiRepository->transaksiHistory($order_number);
     }
 }

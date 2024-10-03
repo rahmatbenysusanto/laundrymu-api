@@ -56,4 +56,42 @@ class PengirimanController extends Controller
             ], 400);
         }
     }
+
+    public function update(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            DB::beginTransaction();
+
+            DB::commit();
+            return response()->json([
+                'status'    => true,
+                'message'   => 'Update Pengiriman Successfully',
+            ], 201);
+        } catch (\Exception $err) {
+            DB::rollBack();
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Update Pengiriman Failed',
+                'errors'    => $err->getMessage()
+            ], 400);
+        }
+    }
+
+    public function delete(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $this->pengirimanService->findById($request->query('id'));
+
+            return response()->json([
+                'status'    => true,
+                'message'   => 'Delete Pengiriman Successfully',
+            ], 200);
+        } catch (\Exception $err) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Delete Pengiriman Failed',
+                'errors'    => $err->getMessage()
+            ], 400);
+        }
+    }
 }

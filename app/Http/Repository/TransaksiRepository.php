@@ -47,4 +47,18 @@ class TransaksiRepository
             ->whereIn('status', $status)
             ->orderBy('created_at', 'DESC')->get();
     }
+
+    public function findTransaksi($orderNumber)
+    {
+        return Transaksi::with('pelanggan', 'pembayaran', 'transaksiDetail', 'transaksiDetail.layanan', 'transaksiDetail.parfum', 'pengiriman')
+            ->where('order_number', $orderNumber)
+            ->first();
+    }
+
+    public function transaksiHistory($orderNumber)
+    {
+        return Transaksi::with('transaksiHistory')
+            ->where('order_number', $orderNumber)
+            ->first();
+    }
 }
