@@ -135,19 +135,17 @@ class TransaksiService
                     'updated_at'    => now()->timestamp * 1000,
                 ]);
                 break;
+            case 'selesai':
+            case 'diantar':
             case 'diambil':
                 $this->transaksiRepository->updateStatus($request->id, 'close');
                 $this->transaksiHistoryRepository->create([
                     'transaksi_id'  => $request->id,
                     'status'        => 'close',
-                    'keterangan'    => 'Laundry sudah diambil oleh pelanggan & sudah melunasi pembayaran',
+                    'keterangan'    => 'Laundry sudah diambil oleh pelanggan',
                     'created_at'    => now()->timestamp * 1000,
                     'updated_at'    => now()->timestamp * 1000,
                 ]);
-                break;
-            case 'diantar':
-            case 'selesai':
-                $this->transaksiRepository->updateStatus($request->id, 'diambil');
                 break;
             case 'pending':
                 $this->transaksiRepository->updateStatus($request->id, 'pengambilan');

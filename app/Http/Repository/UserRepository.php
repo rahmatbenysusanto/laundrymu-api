@@ -25,4 +25,9 @@ class UserRepository
     {
         return User::where('id', $id)->first();
     }
+
+    public function updateById($id, $data): void
+    {
+        User::where('id', $id)->update($data);
+    }
 }

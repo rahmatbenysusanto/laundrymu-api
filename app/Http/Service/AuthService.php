@@ -2,6 +2,7 @@
 
 namespace App\Http\Service;
 
+use App\Http\Repository\DiskonRepository;
 use App\Http\Repository\LayananRepository;
 use App\Http\Repository\OutletRepository;
 use App\Http\Repository\ParfumRepository;
@@ -23,6 +24,7 @@ class AuthService
         protected PembayaranRepository $pembayaranRepository,
         protected LayananRepository $layananRepository,
         protected PengirimanRepository $pengirimanRepository,
+        protected DiskonRepository $diskonRepository,
     ) {}
 
     public function create($request): void
@@ -86,6 +88,15 @@ class AuthService
             'updated_at'=> now()->timestamp * 1000,
         ]);
 
+        $this->diskonRepository->create([
+            'outlet_id' => $outlet->id,
+            'nama'      => '-',
+            'type'      => 'nominal',
+            'nominal'   => 0,
+            'created_at'=> now()->timestamp * 1000,
+            'updated_at'=> now()->timestamp * 1000,
+        ]);
+
         NotificationJob::dispatch('user baru', [
             'no_hp' => $request->no_hp,
             'otp'   => $otp
@@ -120,10 +131,24 @@ class AuthService
                 'nama'          => $user->nama,
                 'role'          => $user->role,
                 'status'        => $user->status,
-                'user_id'       => $user->id
+                'user_id'       => $user->id,
+                'no_hp'         => $user->no_hp,
             ];
         }
 
         abort(400, 'User tidak ditemukan!');
+    }
+
+    public function verifikasiOTP($request): void
+    {
+        $otp = $request->post('otp');
+
+        $user = $this->userRepository->findByNoHp($request->no_hp);
+        if ($otp == $user->otp) {
+            $this->userRepository->updateById($user->id, [
+                'status'        => 'active',
+                'updated_at'    => now()->timestamp * 1000,
+            ]);
+        }
     }
 }

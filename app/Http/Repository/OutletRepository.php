@@ -11,9 +11,9 @@ class OutletRepository
         return Outlet::create($data);
     }
 
-    public function findById($id)
+    public function findById($id, $userId)
     {
-        return Outlet::where('id', $id)->first();
+        return Outlet::where('id', $id)->where('user_id', $userId)->first();
     }
 
     public function update($id, $data): void

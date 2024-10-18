@@ -28,8 +28,8 @@ class OutletService
 
     public function perpanjangLisensi($request): void
     {
-        $lisensi = $this->lisensiRepository->find($request->lisensi_id);
-        $outlet = $this->outletRepository->findById($request->outlet_id);
+        $lisensi = $this->lisensiRepository->find($request->post('lisensi_id'));
+        $outlet = $this->outletRepository->findById($request->post('outlet_id'), $request->post('user_id'));
 
         $title = 'Pembayaran '.$outlet->nama;
         $no = date('Ymd').rand(100000, 999999);
@@ -62,7 +62,6 @@ class OutletService
 
     public function create($request): void
     {
-        Log::info($request->all());
         $outlet = $this->outletRepository->create([
             'user_id'   => $request->user_id,
             'nama'      => $request->nama,
@@ -137,9 +136,9 @@ class OutletService
         ]);
     }
 
-    public function findById($id)
+    public function findById($id, $userId)
     {
-        return $this->outletRepository->findById($id);
+        return $this->outletRepository->findById($id, $userId);
     }
 
     public function historyPembayaran($outlet_id): \Illuminate\Database\Eloquent\Collection

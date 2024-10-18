@@ -5,6 +5,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiskonController;
 use App\Http\Controllers\FlipController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\LisensiController;
 use App\Http\Controllers\OutletController;
@@ -27,6 +28,10 @@ Route::middleware(JwtMiddleware::class)->group(function () {
         return response()->json([
             'status'    => true
         ]);
+    });
+
+    Route::prefix('auth')->controller(AuthController::class)->group(function () {
+        Route::post('/verifikasi-otp', 'verifikasiOTP');
     });
 
     Route::prefix('dashboard')->controller(DashboardController::class)->group(function () {
@@ -115,6 +120,15 @@ Route::middleware(JwtMiddleware::class)->group(function () {
         Route::post('/', 'create');
         Route::delete('/', 'delete');
         Route::patch('/', 'update');
+    });
+
+    Route::prefix('laporan')->controller(LaporanController::class)->group(function () {
+        // Operasional API
+        Route::get('/jumlah-transaksi', 'getTransaksi');
+        Route::get('/layanan', 'getLayanan');
+        Route::get('/parfum', 'getParfum');
+        Route::get('/diskon', 'getDiskon');
+        Route::get('/pembayaran', 'getPembayaran');
     });
 });
 

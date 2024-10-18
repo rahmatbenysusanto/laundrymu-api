@@ -26,7 +26,6 @@ class CreateRequest extends FormRequest
             'harga'             => 'required|numeric|min:0',
             'harga_diskon'      => 'nullable|numeric|min:0',
             'biaya_pengiriman'  => 'nullable|numeric|min:0',
-            'total_harga'       => 'required|numeric|min:0',
             'catatan'           => 'nullable|string|max:255',
             'harga_parfum'      => 'nullable|numeric|min:0',
             'detail'            => 'required|array',

@@ -23,13 +23,13 @@ class OutletController extends Controller
             $this->outletService->create($request);
             DB::commit();
             return response()->json([
-                'success'   => true,
+                'status'    => true,
                 'message'   => 'Create Outlet Successfully'
             ], 201);
         } catch (\Exception $err) {
             DB::rollBack();
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Create Outlet Failed',
                 'errors'    => $err->getMessage()
             ], 400);
@@ -43,13 +43,13 @@ class OutletController extends Controller
             $this->outletService->perpanjangLisensi($request);
             DB::commit();
             return response()->json([
-                'success'   => true,
+                'status'    => true,
                 'message'   => 'Perpanjang Lisensi Outlet Successfully'
             ], 200);
         } catch (\Exception $err) {
             DB::rollBack();
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Create Outlet Failed',
                 'errors'    => $err->getMessage()
             ], 400);
@@ -60,17 +60,17 @@ class OutletController extends Controller
     {
         try {
             DB::beginTransaction();
-            $outlet = $this->outletService->findById($request->query('id'));
+            $outlet = $this->outletService->findById($request->query('id'), $request->attributes->get('user_id'));
             DB::commit();
             return response()->json([
-                'success'   => true,
+                'status'    => true,
                 'message'   => 'Find Outlet Successfully',
                 'data'      => $outlet
             ], 200);
         } catch (\Exception $err) {
             DB::rollBack();
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Find Outlet Failed',
                 'errors'    => $err->getMessage()
             ], 400);
@@ -84,14 +84,14 @@ class OutletController extends Controller
             $result = $this->outletService->findByUserId($request->attributes->get('user_id'));
             DB::commit();
             return response()->json([
-                'success'   => true,
+                'status'    => true,
                 'message'   => 'Find Outlet Successfully',
                 'data'      => $result
             ], 200);
         } catch (\Exception $err) {
             DB::rollBack();
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Find Outlet Failed',
                 'errors'    => $err->getMessage()
             ], 400);
@@ -105,13 +105,13 @@ class OutletController extends Controller
 
             DB::commit();
             return response()->json([
-                'success'   => true,
+                'status'    => true,
                 'message'   => 'Update Outlet Successfully'
             ], 200);
         } catch (\Exception $err) {
             DB::rollBack();
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Update Outlet Failed',
                 'errors'    => $err->getMessage()
             ], 400);
@@ -124,13 +124,13 @@ class OutletController extends Controller
             $history = $this->outletService->historyPembayaran($request->query('outlet_id'));
 
             return response()->json([
-                'success'   => true,
+                'status'    => true,
                 'message'   => 'History Pembayaran Outlet Successfully',
                 'data'      => $history
             ]);
         } catch (\Exception $err) {
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Get History Pembayaran Failed',
                 'errors'    => $err->getMessage()
             ], 400);
@@ -143,13 +143,13 @@ class OutletController extends Controller
             $history = $this->outletService->findByNomorPembayaran($request->query('nomor_pembayaran'));
 
             return response()->json([
-                'success'   => true,
+                'status'    => true,
                 'message'   => 'History Pembayaran Outlet Successfully',
                 'data'      => $history
             ]);
         } catch (\Exception $err) {
             return response()->json([
-                'success'   => false,
+                'status'    => false,
                 'message'   => 'Get History Pembayaran Failed',
                 'errors'    => $err->getMessage()
             ], 400);

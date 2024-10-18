@@ -4,6 +4,7 @@ namespace App\Http\Repository;
 
 use App\Models\Transaksi;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class TransaksiRepository
 {
@@ -19,7 +20,10 @@ class TransaksiRepository
 
     public function updateStatus($id, $status): void
     {
-        Transaksi::where('id', $id)->update(['status' => $status]);
+        Transaksi::where('id', $id)->update([
+            'status'        => $status,
+            'updated_at'    => now()->timestamp * 1000
+        ]);
     }
 
     public function jumlahTransaksi($outlet_id, $start_date, $end_date)
@@ -60,5 +64,34 @@ class TransaksiRepository
         return Transaksi::with('transaksiHistory')
             ->where('order_number', $orderNumber)
             ->first();
+    }
+
+    public function jumlahTransaksiByStatus($outlet_id, $status, $start_date, $end_date)
+    {
+        return Transaksi::where('outlet_id', $outlet_id)
+            ->where('updated_at', '>=', strtotime($start_date.' 00:00:00') * 1000)
+            ->where('updated_at', '<=', strtotime($end_date.' 23:59:59') * 1000)
+            ->whereIn('status', (array)$status)
+            ->count();
+    }
+
+    public function countDiskonByOutletId($outlet_id, $diskon_id, $start_date, $end_date)
+    {
+        return Transaksi::where('outlet_id', $outlet_id)
+            ->where('diskon_id', $diskon_id)
+            ->where('created_at', '>=', strtotime($start_date.' 00:00:00') * 1000)
+            ->where('created_at', '<=', strtotime($end_date.' 23:59:59') * 1000)
+            ->where('status', '!=', 'batal')
+            ->count();
+    }
+
+    public function countPembayaranByOutletId($outlet_id, $pembayaran_id, $start_date, $end_date)
+    {
+        return Transaksi::where('outlet_id', $outlet_id)
+            ->where('pembayaran_id', $pembayaran_id)
+            ->where('created_at', '>=', strtotime($start_date.' 00:00:00') * 1000)
+            ->where('created_at', '<=', strtotime($end_date.' 23:59:59') * 1000)
+            ->where('status', '!=', 'batal')
+            ->count();
     }
 }
