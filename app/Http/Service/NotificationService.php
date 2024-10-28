@@ -212,4 +212,14 @@ Terima kasih!
         Selamat menikmati layanan kami, dan terima kasih telah mempercayakan kebersihan pakaian Anda kepada kami! 👕✨
         EOT;
     }
+
+    public function findByUserId($userId)
+    {
+        return $this->notificationRepository->findByUser($userId);
+    }
+
+    public function count($userId)
+    {
+        return $this->notificationRepository->countByUserId($userId);
+    }
 }

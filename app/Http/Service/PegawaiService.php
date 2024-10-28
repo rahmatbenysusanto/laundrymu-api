@@ -2,6 +2,7 @@
 
 namespace App\Http\Service;
 
+use App\Http\Repository\PegawaiRepository;
 use App\Http\Repository\UserHasOutletRepository;
 use App\Http\Repository\UserRepository;
 use Illuminate\Support\Facades\Hash;
@@ -10,7 +11,8 @@ class PegawaiService
 {
     public function __construct(
         protected UserRepository $userRepository,
-        protected UserHasOutletRepository $userHasOutletRepository
+        protected UserHasOutletRepository $userHasOutletRepository,
+        protected PegawaiRepository $pegawaiRepository
     ) {}
 
     public function create($request): void
@@ -25,9 +27,11 @@ class PegawaiService
             'updated_at'=> now()->timestamp * 1000,
         ]);
 
-        $this->userHasOutletRepository->create([
+        $this->pegawaiRepository->create([
             'user_id'   => $user->id,
             'outlet_id' => $request->outlet_id,
+            'created_at'=> now()->timestamp * 1000,
+            'updated_at'=> now()->timestamp * 1000,
         ]);
     }
 

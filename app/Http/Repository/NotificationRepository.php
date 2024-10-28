@@ -2,6 +2,7 @@
 
 namespace App\Http\Repository;
 
+use App\Models\Notification;
 use GuzzleHttp\Client;
 
 class NotificationRepository
@@ -23,5 +24,33 @@ class NotificationRepository
         $body = $response->getBody();
         $content = $body->getContents();
         return json_decode($content, true);
+    }
+
+    public function create($data): void
+    {
+        Notification::create($data);
+    }
+
+    public function findByUser($userId)
+    {
+        return Notification::where('user_id', $userId)->get();
+    }
+
+    public function findById($id)
+    {
+        return Notification::where('id', $id)->first();
+    }
+
+    public function readNotification($id): void
+    {
+        Notification::where('id', $id)->update([
+            'status'        => 'read',
+            'updated_at'    => now()->timestamp * 1000
+        ]);
+    }
+
+    public function countByUserId($userId)
+    {
+        return Notification::where('user_id', $userId)->get()->count();
     }
 }

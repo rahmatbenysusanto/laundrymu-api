@@ -8,8 +8,10 @@ use App\Http\Controllers\FlipController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\LisensiController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OutletController;
 use App\Http\Controllers\ParfumController;
+use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PengirimanController;
@@ -21,6 +23,12 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
     Route::post('/login', 'login');
+});
+
+Route::get('/testing-api', function () {
+    return response()->json([
+        'status'    => true
+    ]);
 });
 
 Route::middleware(JwtMiddleware::class)->group(function () {
@@ -129,6 +137,15 @@ Route::middleware(JwtMiddleware::class)->group(function () {
         Route::get('/parfum', 'getParfum');
         Route::get('/diskon', 'getDiskon');
         Route::get('/pembayaran', 'getPembayaran');
+    });
+
+    Route::prefix('notification')->controller(NotificationController::class)->group(function () {
+        Route::get('/', 'findByUserId');
+        Route::get('/count', 'countNotification');
+    });
+
+    Route::prefix('pegawai')->controller(PegawaiController::class)->group(function () {
+        Route::post('/', 'create');
     });
 });
 
