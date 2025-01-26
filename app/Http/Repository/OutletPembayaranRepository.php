@@ -23,7 +23,7 @@ class OutletPembayaranRepository
 
     public function getByOutletId($outlet_id): \Illuminate\Database\Eloquent\Collection
     {
-        return OutletPembayaran::with('outlet', 'lisensi')->where('outlet_id', $outlet_id)->get();
+        return OutletPembayaran::with('outlet', 'lisensi')->orderBy('id', 'DESC')->where('outlet_id', $outlet_id)->get();
     }
 
     public function findByNomorPembayaran($nomor_pembayaran)

@@ -110,7 +110,7 @@ class OutletService
         ]);
 
         $lisensi = $this->lisensiRepository->find($request->lisensi_id);
-        $outlet = $this->outletRepository->findById($outlet->id);
+        $outlet = $this->outletRepository->findById($outlet->id, $request->user_id);
 
         $title = 'Pembayaran '.$outlet->nama;
         $no = date('Ymd').rand(100000, 999999);

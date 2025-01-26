@@ -13,12 +13,12 @@ class PengirimanRepository
 
     public function findByOutletId($outlet_id)
     {
-        return Pengiriman::where('outlet_id', $outlet_id)->get();
+        return Pengiriman::where('outlet_id', $outlet_id)->where('delete', 0)->get();
     }
 
     public function findById($id)
     {
-        return Pengiriman::where('id', $id)->first();
+        return Pengiriman::where('id', $id)->where('delete', 0)->first();
     }
 
     public function delete($id): void
