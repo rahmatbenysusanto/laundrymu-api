@@ -8,6 +8,7 @@ use App\Http\Repository\OutletRepository;
 use App\Http\Repository\ParfumRepository;
 use App\Http\Repository\PembayaranRepository;
 use App\Http\Repository\PengirimanRepository;
+use App\Http\Repository\SupplierRepository;
 use App\Http\Repository\UserHasOutletRepository;
 use App\Http\Repository\UserRepository;
 use App\Jobs\NotificationJob;
@@ -25,6 +26,7 @@ class AuthService
         protected LayananRepository $layananRepository,
         protected PengirimanRepository $pengirimanRepository,
         protected DiskonRepository $diskonRepository,
+        protected SupplierRepository $supplierRepository,
     ) {}
 
     public function create($request): void
@@ -95,6 +97,11 @@ class AuthService
             'nominal'   => 0,
             'created_at'=> now()->timestamp * 1000,
             'updated_at'=> now()->timestamp * 1000,
+        ]);
+
+        $this->supplierRepository->create([
+            'outlet_id' => $outlet->id,
+            'nama'      => '-'
         ]);
 
         NotificationJob::dispatch('user baru', [

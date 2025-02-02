@@ -9,6 +9,7 @@ use App\Http\Requests\Outlet\UpdateRequest;
 use App\Http\Service\OutletService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class OutletController extends Controller
 {
@@ -154,5 +155,11 @@ class OutletController extends Controller
                 'errors'    => $err->getMessage()
             ], 400);
         }
+    }
+
+    public function uploadProfile(Request $request)
+    {
+        $url = Storage::disk('s3')->url('public-file.txt');
+        return $url;
     }
 }

@@ -16,6 +16,11 @@ class OutletRepository
         return Outlet::where('id', $id)->where('user_id', $userId)->first();
     }
 
+    public function findByIdFlip($id)
+    {
+        return Outlet::where('id', $id)->first();
+    }
+
     public function update($id, $data): void
     {
         Outlet::where('id', $id)->update($data);

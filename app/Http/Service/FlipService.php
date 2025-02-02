@@ -8,6 +8,7 @@ use App\Http\Repository\OutletPembayaranRepository;
 use App\Http\Repository\OutletRepository;
 use App\Jobs\NotificationJob;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class FlipService
 {
@@ -48,11 +49,20 @@ class FlipService
                 ]);
 
                 $lisensi = $this->lisensiRepository->find($outlet_pembayaran->lisensi_id);
-                $outlet = $this->outletRepository->findById($outlet_pembayaran->outlet_id);
+                $outlet = $this->outletRepository->findByIdFlip($outlet_pembayaran->outlet_id);
+
+                $currentExpired = $outlet->expired;
+                if (strtotime($currentExpired) < time()) {
+                    Log::info('DI BAWAH');
+                    $newExpired = date('Y-m-d H:i:s', strtotime("+$lisensi->bulan months"));
+                } else {
+                    Log::info('DI ATAS');
+                    $newExpired = date('Y-m-d H:i:s', strtotime("+$lisensi->bulan months", strtotime($currentExpired)));
+                }
 
                 $this->outletRepository->update($outlet_pembayaran->outlet_id, [
-                    'status'    => 'active',
-                    'expired'   => DB::raw('DATE_ADD(expired, INTERVAL '.$lisensi->bulan.' MONTH)')
+                    'status'  => 'active',
+                    'expired' => $newExpired,
                 ]);
 
                 NotificationJob::dispatch('pembayaran outlet berhasil', [

@@ -5,6 +5,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiskonController;
 use App\Http\Controllers\FlipController;
+use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\LisensiController;
@@ -26,6 +27,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 });
 
 Route::get('/testing-api', function () {
+    \Illuminate\Support\Facades\DB::table('users')->get();
     return response()->json([
         'status'    => true
     ]);
@@ -147,8 +149,31 @@ Route::middleware(JwtMiddleware::class)->group(function () {
     Route::prefix('pegawai')->controller(PegawaiController::class)->group(function () {
         Route::post('/', 'create');
     });
+
+    Route::prefix('inventory')->controller(InventoryController::class)->group(function () {
+        Route::get('/', 'getInventory');
+
+        Route::prefix('pembelian')->group(function () {
+            Route::get('/', 'getPembelian');
+            Route::post('/', 'createPembelian');
+        });
+
+        Route::prefix('supplier')->group(function () {
+            Route::get('/', 'getSupplierByOutletId');
+            Route::post('/', 'createSupplier');
+        });
+
+        Route::prefix('barang')->group(function () {
+            Route::post('/', 'createBarang');
+        });
+
+        Route::prefix('satuan')->group(function () {
+            Route::get('/', 'satuan');
+        });
+    });
 });
 
 Route::get('/callback/accept-payment', [FlipController::class, 'callbackAcceptPayment']);
+Route::get('/test-s3', [OutletController::class, 'uploadProfile']);
 
 
