@@ -87,6 +87,17 @@ class InventoryController extends Controller
         }
     }
 
+    public function getPembelian(Request $request): JsonResponse
+    {
+        $pembelian = $this->inventoryService->getPembelian($request->query('outlet_id'));
+
+        return response()->json([
+            'status'    => true,
+            'message'   => 'Get Pembelian Inventory Success',
+            'data'      => $pembelian
+        ]);
+    }
+
     public function createPembelian(Request $request): JsonResponse
     {
         try {

@@ -3,6 +3,7 @@
 namespace App\Http\Service;
 
 use App\Http\Repository\BarangRepository;
+use App\Http\Repository\InventoryStockDetailRepository;
 use App\Http\Repository\InventoryStockRepository;
 use App\Http\Repository\PembelianBarangDetailRepository;
 use App\Http\Repository\PembelianBarangRepository;
@@ -16,6 +17,7 @@ class InventoryService
         protected SatuanRepository $satuanRepository,
         protected BarangRepository $barangRepository,
         protected InventoryStockRepository $inventoryStockRepository,
+        protected InventoryStockDetailRepository $inventoryStockDetailRepository,
         protected SupplierRepository $supplierRepository,
         protected PembelianBarangRepository $pembelianBarangRepository,
         protected PembelianBarangDetailRepository $pembelianBarangDetailRepository,
@@ -65,29 +67,46 @@ class InventoryService
         ]);
     }
 
-    public function createPembelian($request)
+    public function createPembelian($request): void
     {
         $pembelian_id = $this->pembelianBarangRepository->create([
             'outlet_id'         => $request->outlet_id,
-            'inbound_number'    => '',
-            'jumlah'            => '',
-            'total_harga'       => '',
-            'status_pembayaran' => '',
-            'supplier_id'       => '',
-            'tanggal_pembelian' => '',
-            'note'              => '',
+            'inbound_number'    => 'PO-'.date('ymd').rand(0000,999),
+            'jumlah'            => $request->qty,
+            'total_harga'       => $request->qty * $request->harga,
+            'status_pembayaran' => $request->status_pembayaran,
+            'supplier_id'       => $request->supplier_id,
+            'tanggal_pembelian' => $request->tanggal_pembelian,
+            'note'              => $request->note,
             'created_at'        => now()->timestamp * 1000,
             'updated_at'        => now()->timestamp * 1000,
         ]);
 
-        $this->pembelianBarangDetailRepository->create([
+        $pembelian_detail = $this->pembelianBarangDetailRepository->create([
             'outlet_id'     => $request->outlet_id,
-            'barang_id'     => '',
-            'qty'           => '',
-            'harga'         => '',
-            'total_harga'   => '',
+            'barang_id'     => $request->barang_id,
+            'pembelian_id'  => $pembelian_id,
+            'qty'           => $request->qty,
+            'harga'         => $request->harga,
+            'total_harga'   => $request->qty * $request->harga,
             'created_at'    => now()->timestamp * 1000,
             'updated_at'    => now()->timestamp * 1000,
         ]);
+
+        $this->inventoryStockRepository->increment($request->outlet_id, $request->barang_id, $request->qty);
+        $this->inventoryStockDetailRepository->create([
+            'outlet_id'         => $request->outlet_id,
+            'barang_id'         => $request->barang_id,
+            'pembelian_detail'  => $pembelian_detail,
+            'qty'               => $request->qty,
+            'harga'             => $request->harga,
+            'created_at'        => now()->timestamp * 1000,
+            'updated_at'        => now()->timestamp * 1000,
+        ]);
+    }
+
+    public function getPembelian($outlet_id): Collection
+    {
+        return $this->pembelianBarangRepository->findByOutletId($outlet_id);
     }
 }

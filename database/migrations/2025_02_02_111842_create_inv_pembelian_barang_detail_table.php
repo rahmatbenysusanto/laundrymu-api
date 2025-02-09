@@ -15,6 +15,7 @@ return new class extends Migration
             $table->bigIncrements('id')->primary();
             $table->integer('outlet_id');
             $table->integer('barang_id');
+            $table->integer('pembelian_id');
             $table->integer('qty');
             $table->integer('harga');
             $table->integer('total_harga');

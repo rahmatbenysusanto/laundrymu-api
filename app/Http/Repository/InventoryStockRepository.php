@@ -26,4 +26,20 @@ class InventoryStockRepository
             ])
             ->get();
     }
+
+    public function increment($outletId, $barangId, $qty): void
+    {
+        DB::table('inv_stock')
+            ->where('outlet_id', $outletId)
+            ->where('barang_id', $barangId)
+            ->increment('stock', $qty);
+    }
+
+    public function decrement($outletId, $barangId, $qty): void
+    {
+        DB::table('inv_stock')
+            ->where('outlet_id', $outletId)
+            ->where('barang_id', $barangId)
+            ->decrement('stock', $qty);
+    }
 }

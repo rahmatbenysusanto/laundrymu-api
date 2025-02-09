@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\DB;
 
 class PembelianBarangDetailRepository
 {
-    public function create($data): void
+    public function create($data): int
     {
-        DB::table('inv_pembelian_barang_detail')->insert($data);
+        return DB::table('inv_pembelian_barang_detail')->insertGetId($data);
     }
 }
