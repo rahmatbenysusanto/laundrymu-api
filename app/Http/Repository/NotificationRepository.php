@@ -33,7 +33,7 @@ class NotificationRepository
 
     public function findByUser($userId)
     {
-        return Notification::where('user_id', $userId)->get();
+        return Notification::where('user_id', $userId)->orderBy('id', 'DESC')->get();
     }
 
     public function findById($id)

@@ -13,7 +13,9 @@ use App\Http\Repository\UserHasOutletRepository;
 use App\Http\Repository\UserRepository;
 use App\Jobs\NotificationJob;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthService
 {
@@ -157,5 +159,27 @@ class AuthService
                 'updated_at'    => now()->timestamp * 1000,
             ]);
         }
+    }
+
+    public function generateNewToken($token): array
+    {
+        try {
+            $credentials = JWT::decode($token, new Key(env('JWT_SECRET'), 'HS256'));
+        } catch (\Exception $err) {
+            abort(401, 'Refresh token tidak valid!');
+        }
+
+        $user = $this->userRepository->findById($credentials->user_id);
+
+        return [
+            'access_token'  => $this->generateToken($user->id, 'token'),
+            'refresh_token' => $this->generateToken($user->id, 'refresh token'),
+            'token_type'    => 'Bearer',
+            'nama'          => $user->nama,
+            'role'          => $user->role,
+            'status'        => $user->status,
+            'user_id'       => $user->id,
+            'no_hp'         => $user->no_hp,
+        ];
     }
 }

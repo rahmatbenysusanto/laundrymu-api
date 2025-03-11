@@ -73,4 +73,22 @@ class AuthController extends Controller
             ], 400);
         }
     }
+
+    public function generateNewToken(Request $request): \Illuminate\Http\JsonResponse
+    {
+        try {
+            $data = $this->authService->generateNewToken($request->bearerToken());
+            return response()->json([
+                'status'    => true,
+                'message'   => 'New Token Successfully',
+                'data'      => $data
+            ]);
+        } catch (\Exception $err) {
+            return response()->json([
+                'status'    => false,
+                'message'   => 'Generate New Token Failed',
+                'errors'    => $err->getMessage()
+            ], 400);
+        }
+    }
 }

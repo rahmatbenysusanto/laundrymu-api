@@ -87,7 +87,7 @@ class NotificationService
         $transaksi = $this->transaksiRepository->findById($transaksi_id);
         $tanggal = date('d-M-Y H:i:s', strtotime($transaksi->created_at));
         $transaksiDetail = $this->transaksiDetailRepository->findByTransaksiId($transaksi_id);
-        $outlet = $this->outletRepository->findById($transaksi->outlet_id);
+        $outlet = $this->outletRepository->getById($transaksi->outlet_id);
 
         $nota = "Hai, ".$transaksi->pelanggan->nama."
 

@@ -24,10 +24,11 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
     Route::post('/login', 'login');
+    Route::get('/generate-refresh-token', 'generateNewToken');
 });
 
 Route::get('/testing-api', function () {
-    \Illuminate\Support\Facades\DB::table('users')->get();
+//    \Illuminate\Support\Facades\DB::table('users')->get();
     return response()->json([
         'status'    => true
     ]);
